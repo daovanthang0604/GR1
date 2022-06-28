@@ -2,3 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base{
+    body{
+        @apply font-tt leading-6;
+    }
+    .tab{
+        @apply p-2 text-white bg-ocean rounded-md;
+    }
+}
