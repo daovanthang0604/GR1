@@ -1,0 +1,51 @@
+export const users = [
+  {
+    id: "1",
+    name: "Brad Gibson",
+    age: "17",
+    image: "https://randomuser.me/api/portraits/thumb/men/75.jpg",
+    job: "UX Designer",
+  },
+  {
+    id: "2",
+    name: "Nicky Balm",
+    age: "18",
+    image: "https://randomuser.me/api/portraits/thumb/women/79.jpg",
+    job: "UI Designer",
+  },
+  {
+    id: "3",
+    name: "Victor Smith",
+    age: "20",
+    image: "https://randomuser.me/api/portraits/thumb/men/80.jpg",
+    job: "Developer",
+  },
+  {
+    id: "4",
+    name: "Van Steensel",
+    age: "22",
+    image: "https://randomuser.me/api/portraits/thumb/men/8.jpg",
+    job: "Developer",
+  },
+  {
+    id: "5",
+    name: "Dana Marchand",
+    age: "21",
+    image: "https://randomuser.me/api/portraits/thumb/women/75.jpg",
+    job: "Tester",
+  },
+  {
+    id: "6",
+    name: "Austin Anderson",
+    age: "40",
+    image: "https://randomuser.me/api/portraits/thumb/men/32.jpg",
+    job: "Tester",
+  },
+  {
+    id: "7",
+    name: "Hedy Korn",
+    age: "22",
+    image: "https://randomuser.me/api/portraits/thumb/women/83.jpg",
+    job: "BA",
+  },
+];
