@@ -15,8 +15,11 @@ import {
   LogoutIcon,
 } from "@heroicons/react/outline";
 import UserImg from "./../assets/user.jpg";
+import { openModal } from "../features/modal/modalSlice";
+import { useDispatch } from "react-redux";
 const NavBar = () => {
   const [toggle, setToggle] = useState(false);
+  const dispatch = useDispatch();
   return (
     <nav
       className={`p-8 w-[300px] bg-navi h-screen border-r-2 border-slate-100 relative transition-all ease-out duration-200 ${
@@ -90,10 +93,11 @@ const NavBar = () => {
           className={`w-10 h-10 text-white rounded-full bg-ocean p-1.5 cursor-pointer ${
             toggle && "shrink-0"
           }`}
+          onClick={() => dispatch(openModal())}
         />
       </div>
       {/* User profile */}
-      <div className="absolute bottom-8">
+      <div className="absolute bottom-4">
         {!toggle ? (
           <div
             className={`flex justify-around space-x-4 items-center ${
