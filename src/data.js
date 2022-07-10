@@ -52,67 +52,72 @@ export const users = [
 export const tasks = [
   {
     id: "1",
-    misson: [{
-      name: "login page",
-      startDate: new Date(2022,6,11),
-      endDate: new Date(2022,6,13)
-    },
-    {
-      name: "sign up page",
-      startDate: new Date(2022,6,18),
-      endDate: new Date(2022,6,19)
-    },
-  ]
+    misson: [
+      {
+        name: "login page",
+        startDate: new Date(2022, 6, 11),
+        endDate: new Date(2022, 6, 13),
+      },
+      {
+        name: "sign up page",
+        startDate: new Date(2022, 6, 18),
+        endDate: new Date(2022, 6, 19),
+      },
+    ],
   },
   {
     id: "2",
-    misson: [{
-      name: "User profile",
-      startDate: new Date(2022,6,5),
-      endDate: new Date(2022,6,9)
-    },
-    {
-      name: "User color",
-      startDate: new Date(2022,6,22),
-      endDate: new Date(2022,6,22)
-    },
-  ]
+    misson: [
+      {
+        name: "User profile",
+        startDate: new Date(2022, 6, 5),
+        endDate: new Date(2022, 6, 9),
+      },
+      {
+        name: "User color and scheme",
+        startDate: new Date(2022, 6, 22),
+        endDate: new Date(2022, 6, 22),
+      },
+    ],
   },
   {
     id: "3",
-    misson: [{
-      name: "Chat bot",
-      startDate: new Date(2022,6,15),
-      endDate: new Date(2022,6,16)
-    },
-    {
-      name: "Chat section",
-      startDate: new Date(2022,6,21),
-      endDate: new Date(2022,6,22)
-    },
-  ]
+    misson: [
+      {
+        name: "Chat bot",
+        startDate: new Date(2022, 6, 15),
+        endDate: new Date(2022, 6, 16),
+      },
+      {
+        name: "Chat section",
+        startDate: new Date(2022, 6, 21),
+        endDate: new Date(2022, 6, 22),
+      },
+    ],
   },
   {
     id: "4",
-    misson: [{
-      name: "Payment page",
-      startDate: new Date(2022,6,3),
-      endDate: new Date(2022,6,6)
-    },
-    {
-      name: "Checkout page",
-      startDate: new Date(2022,6,12),
-      endDate: new Date(2022,6,13)
-    },
-  ]
+    misson: [
+      {
+        name: "Payment page",
+        startDate: new Date(2022, 6, 3),
+        endDate: new Date(2022, 6, 6),
+      },
+      {
+        name: "Checkout page",
+        startDate: new Date(2022, 6, 12),
+        endDate: new Date(2022, 6, 13),
+      },
+    ],
   },
   {
     id: "5",
-    misson: [{
-      name: "Figma",
-      startDate: new Date(2022,6,7),
-      endDate: new Date(2022,6,8)
-    }
-  ]
-  }
-]
+    misson: [
+      {
+        name: "Figma",
+        startDate: new Date(2022, 6, 7),
+        endDate: new Date(2022, 6, 8),
+      },
+    ],
+  },
+];

@@ -100,7 +100,7 @@ const Calendar = () => {
                 {days.map((day) => (
                   <div
                     key={day}
-                    className={`w-24 bg-navi flex justify-center items-center relative after:h-[135%] ${
+                    className={`w-24 flex justify-center items-center relative after:h-[140%] ${
                       index == users.length - 1 && "after:h-[100%]"
                     } after:absolute after:w-full after:border-x after:border-solid after:border-slate-200 tester`}
                   >
