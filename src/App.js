@@ -10,8 +10,8 @@ function App() {
   const { isOpen } = useSelector((store) => store.modal);
   return (
     <div className="App">
-      {/* <Login/> */}
-      {isOpen && (
+      <Login/>
+      {/* {isOpen && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-overlay z-30"></div>
       )}
       <div className="flex">
@@ -23,7 +23,7 @@ function App() {
           <ProjectsTab />
           <Calendar />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

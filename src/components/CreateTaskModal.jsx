@@ -2,12 +2,25 @@ import React, { useState } from "react";
 import { XIcon } from "@heroicons/react/outline";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../features/modal/modalSlice";
+import { projects,users } from "../data";
 import { KeyboardDatePicker } from "@material-ui/pickers";
+import { ThemeProvider, makeStyles } from '@material-ui/styles';
+import { createTheme } from "@material-ui/core";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 const CreateTaskModal = () => {
   const dispatch = useDispatch();
+  const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  console.log(startDate);
+  // create theme for mui calendar
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#1d5cfc'
+      }
+    },
+  })
   return (
     <div className="fixed top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] z-30 bg-white lg:w-1/3 w-96 rounded-md">
       <form className="flex flex-col p-8 space-y-4 mb-4">
@@ -24,25 +37,35 @@ const CreateTaskModal = () => {
           <span className="font-medium">Title</span>
           <div className="flex items-center">
             <input
-              type="text"
+              type="text" id="title" name="title" onChange={(e) => setTitle(e.target.value)} value={title}
               className="outline-none border-b border-slate-200 focus:border-b focus:border-ocean w-full pr-4"
             />
-            <XIcon className="w-3 h-3 absolute right-7" />
+            {title && <XIcon className="w-3 h-3 absolute right-[1.875rem] cursor-pointer" onClick={() => setTitle('')} />}
           </div>
         </div>
         <div className="flex flex-col w-full space-y-2">
           <span className="font-medium">Choose Project</span>
-          <input
-            type="text"
-            className="outline-none border border-slate-200 focus:border-ocean rounded-md p-2"
+          <Autocomplete
+            disablePortal
+            id="project"
+            options={projects}
+            getOptionLabel={(option) => option.name || ""}
+            sx={{
+              "& .MuiOutlinedInput-root.Mui-focused": {
+                "& > fieldset": {
+                  borderColor: "#1d5cfc"
+                }
+              }
+            }}
+            renderInput={(params) => <TextField {...params} label="project" />}
           />
         </div>
         {/* pick start and end time for task */}
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-2">
           <span className="font-medium">Estimate time</span>
           <div className="flex items-center justify-between">
             <span className="">Start time</span>
-            <KeyboardDatePicker
+            <ThemeProvider theme={theme}> <KeyboardDatePicker
               disableToolbar
               InputAdornmentProps={{ position: "end" }}
               value={startDate}
@@ -50,7 +73,19 @@ const CreateTaskModal = () => {
               label="Select date"
               inputVariant="outlined"
               format="MM/dd/yyyy"
-            />
+            /></ThemeProvider>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="">End time</span>
+            <ThemeProvider theme={theme}> <KeyboardDatePicker
+              disableToolbar
+              InputAdornmentProps={{ position: "end" }}
+              value={endDate}
+              onChange={setEndDate}
+              label="Select date"
+              inputVariant="outlined"
+              format="MM/dd/yyyy"
+            /></ThemeProvider>
           </div>
         </div>
         <div>
@@ -58,16 +93,25 @@ const CreateTaskModal = () => {
           <textarea
             name="description"
             id="description"
-            className="w-full h-24 outline-none border-2 border-slate-200 focus:border-ocean rounded-md p-2"
+            className="w-full h-24 outline-none border-2 border-gray-200 focus:border-ocean rounded-md p-2"
           ></textarea>
         </div>
         {/* assign to member */}
         <div className="flex flex-col">
           <span className="font-medium">Assign to</span>
-          <input
-            type="text"
-            className="outline-none border border-slate-200 focus:border-ocean rounded-md p-2"
-            placeholder="Search member"
+          <Autocomplete
+            disablePortal
+            id="user"
+            options={users}
+            getOptionLabel={(option) => option.name || ""}
+            sx={{
+              "& .MuiOutlinedInput-root.Mui-focused": {
+                "& > fieldset": {
+                  borderColor: "#1d5cfc"
+                }
+              }
+            }}
+            renderInput={(params) => <TextField {...params} label="Search member" />}
           />
         </div>
 

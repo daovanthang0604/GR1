@@ -121,3 +121,26 @@ export const tasks = [
     ],
   },
 ];
+
+export const projects = [
+  {
+    name: 'Ecommerce project',
+    numberOfMem: '18'
+  },
+  {
+    name: 'Portfolio',
+    numberOfMem: '5'
+  },
+  {
+    name: 'Task management',
+    numberOfMem: '15'
+  },
+  {
+    name: 'Dating app',
+    numberOfMem: '12'
+  }
+]
+
+export const jobs = [
+  'UX Designer', 'UI Designer' , 'Developer' , 'Tester' , 'BA'
+]
