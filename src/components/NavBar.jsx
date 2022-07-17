@@ -16,10 +16,18 @@ import {
 } from "@heroicons/react/outline";
 import UserImg from "./../assets/user.jpg";
 import { openModal } from "../features/modal/modalSlice";
-import { useDispatch } from "react-redux";
+import { logout } from "../features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 const NavBar = () => {
+  const { currentUser } = useSelector((store) => store.user);
   const [toggle, setToggle] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
   return (
     <nav
       className={`p-8 w-[300px] bg-navi h-screen border-r-2 border-slate-100 relative transition-all ease-out duration-200 ${
@@ -48,33 +56,45 @@ const NavBar = () => {
         <div className="flex items-center align-middle space-x-4">
           <ViewGridIcon className="w-8 h-8 text-slate-400" />
           {!toggle && (
-            <span className="text-xl font-medium tracking-tight cursor-pointer">
+            <NavLink
+              to="/main/dashboard"
+              className="text-xl font-medium tracking-tight cursor-pointer"
+            >
               Dashboard
-            </span>
+            </NavLink>
           )}
         </div>
         <div className="flex items-center align-middle space-x-4">
           <ChartBarIcon className="w-8 h-8 text-slate-400" />
           {!toggle && (
-            <span className="text-xl font-medium tracking-tight cursor-pointer">
+            <NavLink
+              to="/main/analytics"
+              className="text-xl font-medium tracking-tight cursor-pointer"
+            >
               Analytics
-            </span>
+            </NavLink>
           )}
         </div>
         <div className="flex items-center align-middle space-x-4">
           <FolderIcon className="w-8 h-8 text-slate-400" />
           {!toggle && (
-            <span className="text-xl font-medium tracking-tight cursor-pointer">
+            <NavLink
+              to="/main"
+              className="text-xl font-medium tracking-tight cursor-pointer"
+            >
               Projects
-            </span>
+            </NavLink>
           )}
         </div>
         <div className="flex items-center align-middle space-x-4">
           <CogIcon className="w-8 h-8 text-slate-400" />
           {!toggle && (
-            <span className="text-xl font-medium tracking-tight cursor-pointer">
+            <NavLink
+              to="/main/settings"
+              className="text-xl font-medium tracking-tight cursor-pointer"
+            >
               Settings
-            </span>
+            </NavLink>
           )}
         </div>
       </div>
@@ -110,14 +130,14 @@ const NavBar = () => {
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <h5>Finna</h5>
-              <span>finna@gmail.com</span>
+              <h5>{currentUser?.fullName}</h5>
+              <span>{currentUser?.email}</span>
             </div>
             <ChevronUpIcon className="w-4 h-4" />
           </div>
         ) : (
           <div className="flex justify-center items-center w-8 h-8 text-slate-400 cursor-pointer">
-            <LogoutIcon />
+            <LogoutIcon onClick={handleLogout} />
           </div>
         )}
       </div>

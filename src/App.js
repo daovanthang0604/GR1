@@ -1,16 +1,30 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Calendar from "./components/Calendar";
 import NavBar from "./components/NavBar";
 import ProjectsTab from "./components/ProjectsTab";
 import Status from "./components/Status";
 import TopBar from "./components/TopBar";
 import Login from "./pages/Login";
+import SignIn from "./components/login/SignIn";
+import Register from "./components/login/Register";
 import { useSelector } from "react-redux";
 import CreateTaskModal from "./components/CreateTaskModal";
+import SharedMainLayout from "./components/main/SharedMainLayout";
+import Projects from "./pages/Projects";
 function App() {
   const { isOpen } = useSelector((store) => store.modal);
   return (
-    <div className="App">
-      <Login/>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />}>
+          <Route index element={<SignIn />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+        <Route path="/main" element={<SharedMainLayout />}>
+          <Route index element={<Projects />}></Route>
+        </Route>
+      </Routes>
+
       {/* {isOpen && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-overlay z-30"></div>
       )}
@@ -24,7 +38,7 @@ function App() {
           <Calendar />
         </div>
       </div> */}
-    </div>
+    </BrowserRouter>
   );
 }
 

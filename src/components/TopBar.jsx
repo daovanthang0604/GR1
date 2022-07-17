@@ -4,8 +4,10 @@ import {
   ChatAlt2Icon,
   ChevronDownIcon,
 } from "@heroicons/react/outline";
+import { useSelector } from "react-redux";
 import UserImg from "./../assets/user.jpg";
 const TopBar = () => {
+  const { currentUser } = useSelector((store) => store.user);
   return (
     <header className="w-full h-fit">
       <div className="flex justify-between items-center leading-6">
@@ -24,7 +26,7 @@ const TopBar = () => {
               alt="user profile"
               className="w-10 h-10 rounded-full"
             />
-            <span>Finna</span>
+            <span>{currentUser.fullName}</span>
             <ChevronDownIcon className="w-4 h-4" />
           </div>
         </div>
