@@ -7,7 +7,7 @@ import Status from "../Status";
 import TopBar from "../TopBar";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
-
+import { Toaster } from "react-hot-toast";
 const SharedMainLayout = () => {
   const { isOpen } = useSelector((store) => store.modal);
   return (
@@ -24,6 +24,7 @@ const SharedMainLayout = () => {
           <Outlet />
         </div>
       </div>{" "}
+      <Toaster/>
     </>
   );
 };

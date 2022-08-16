@@ -9,14 +9,18 @@ import { createTheme } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from "axios";
+import {toast} from "react-hot-toast"
 const CreateTaskModal = () => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
-  const [project,setProjectId] = useState('');
+  const [projectId,setProjectId] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [description, setDescription] = useState('');
+  const [userId,setUserId] = useState('');
   const [users,setUsers] = useState(null);
+  
+  //render all users
   const getAllUsers = async()=>{
     const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
     await setUsers(res.data);
@@ -24,6 +28,35 @@ const CreateTaskModal = () => {
   useEffect(() => {
     getAllUsers()
   }, []);
+
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    console.log( title,
+      projectId,
+      startDate,
+      endDate,
+      description,
+      userId);
+    try {
+      const res = await axios.post(
+        "http://localhost:8800/api/tasks",
+        {
+          title,
+          projectId,
+          startDate,
+          endDate,
+          description,
+          userId
+        },
+        { withCredentials: true }
+      );
+      dispatch(closeModal())
+      toast.success("Create task succesfully!");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // create theme for mui calendar
   const theme = createTheme({
     palette: {
@@ -61,7 +94,7 @@ const CreateTaskModal = () => {
             id="project"
             options={projects}
             getOptionLabel={(option) => option.name || ""}
-            onChange={(e,v)=>setProjectId(v)}
+            onChange={(e,v)=>setProjectId(v.name)}
             sx={{
               "& .MuiOutlinedInput-root.Mui-focused": {
                 "& > fieldset": {
@@ -106,7 +139,7 @@ const CreateTaskModal = () => {
             name="description"
             id="description"
             className="w-full h-24 outline-none border-2 border-gray-200 focus:border-ocean rounded-md p-2"
-            onChange={(e)=>setDescription(e)}
+            onChange={(e)=>setDescription(e.target.value)}
           ></textarea>
         </div>
         {/* assign to member */}
@@ -117,7 +150,7 @@ const CreateTaskModal = () => {
             id="user"
             options={users}
             getOptionLabel={(option) => option.fullName || ""}
-            onChange={(event, value) => console.log(value)}
+            onChange={(event, value) => setUserId(value._id)}
             sx={{
               "& .MuiOutlinedInput-root.Mui-focused": {
                 "& > fieldset": {
@@ -130,7 +163,7 @@ const CreateTaskModal = () => {
         </div>
 
         <div className="text-center">
-          <button className="w-full bg-slate-200 rounded-lg p-2 text-white hover:bg-ocean">
+          <button type="submit" className="w-full bg-slate-200 rounded-lg p-2 text-white hover:bg-ocean" onClick={handleSubmit}>
             Create task
           </button>
         </div>

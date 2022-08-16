@@ -10,6 +10,7 @@ import {
 } from "../../features/user/userSlice";
 import { Link,useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
 const Register = () => {
   const [fullName,setFullName] = useState("");
   const [email,setEmail] = useState("");
@@ -37,6 +38,7 @@ const Register = () => {
       );
       dispatch(loginSuccess(res.data));
       navigate("/main");
+      toast.success("Registered succesfully!");
     }catch(err){
       dispatch(loginFailure());
     }
@@ -113,7 +115,7 @@ const Register = () => {
             <TextField {...params} label="Choose jobs" />
           )}
         />
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <label htmlFor="image" className="block">
             Select image:
           </label>
@@ -125,7 +127,7 @@ const Register = () => {
             className="cursor-pointer"
             onChange={handleImage}
           />
-        </div>
+        </div> */}
         <button
           type="submit"
           className="mt-4 px-10 py-2 text-lg bg-ocean rounded-lg text-white hover:text-tertiary"

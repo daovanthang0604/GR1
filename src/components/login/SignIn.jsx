@@ -7,6 +7,7 @@ import {
 } from "../../features/user/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { toast } from 'react-hot-toast';
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +27,9 @@ const SignIn = () => {
       );
       dispatch(loginSuccess(res.data));
       navigate("/main");
+      setTimeout(() => {
+        toast.success('Login successfully!',{duration: 2000});
+      }, 1000);
     } catch (err) {
       dispatch(loginFailure());
     }
