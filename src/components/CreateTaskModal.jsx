@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { XIcon } from "@heroicons/react/outline";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../features/modal/modalSlice";
-import { projects,users } from "../data";
+import { projects } from "../data";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 import { createTheme } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import axios from "axios";
 const CreateTaskModal = () => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
+  const [project,setProjectId] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [description, setDescription] = useState('');
+  const [users,setUsers] = useState(null);
+  const getAllUsers = async()=>{
+    const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
+    await setUsers(res.data);
+  }
+  useEffect(() => {
+    getAllUsers()
+  }, []);
   // create theme for mui calendar
   const theme = createTheme({
     palette: {
@@ -43,13 +54,14 @@ const CreateTaskModal = () => {
             {title && <XIcon className="w-3 h-3 absolute right-[1.875rem] cursor-pointer" onClick={() => setTitle('')} />}
           </div>
         </div>
-        <div className="flex flex-col w-full space-y-2">
+        <div className={`flex flex-col w-full space-y-2`}>
           <span className="font-medium">Choose Project</span>
           <Autocomplete
             disablePortal
             id="project"
             options={projects}
             getOptionLabel={(option) => option.name || ""}
+            onChange={(e,v)=>setProjectId(v)}
             sx={{
               "& .MuiOutlinedInput-root.Mui-focused": {
                 "& > fieldset": {
@@ -94,6 +106,7 @@ const CreateTaskModal = () => {
             name="description"
             id="description"
             className="w-full h-24 outline-none border-2 border-gray-200 focus:border-ocean rounded-md p-2"
+            onChange={(e)=>setDescription(e)}
           ></textarea>
         </div>
         {/* assign to member */}
@@ -103,7 +116,8 @@ const CreateTaskModal = () => {
             disablePortal
             id="user"
             options={users}
-            getOptionLabel={(option) => option.name || ""}
+            getOptionLabel={(option) => option.fullName || ""}
+            onChange={(event, value) => console.log(value)}
             sx={{
               "& .MuiOutlinedInput-root.Mui-focused": {
                 "& > fieldset": {

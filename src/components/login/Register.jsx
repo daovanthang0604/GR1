@@ -1,16 +1,45 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { jobs } from "../../data";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { Link } from "react-router-dom";
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+} from "../../features/user/userSlice";
+import { Link,useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 const Register = () => {
+  const [fullName,setFullName] = useState("");
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
+  const [job,setJob] = useState("");
   const [image, setImage] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
-  const handleSubmit = (e) => {
-    console.log(image);
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(loginStart);
+    try{
+      const res = await axios.post(
+        "http://localhost:8800/api/auth/register",
+        {
+          fullName,
+          email,
+          password,
+          job
+        },
+        { withCredentials: true }
+      );
+      dispatch(loginSuccess(res.data));
+      navigate("/main");
+    }catch(err){
+      dispatch(loginFailure());
+    }
   };
   return (
     <div className="flex flex-col  space-y-4">
@@ -23,6 +52,7 @@ const Register = () => {
             name="fullName"
             id="fullName"
             placeholder="Full Name"
+            onChange={(e)=>setFullName(e.target.value)}
             className="peer py-3 px-6 border border-gray-300 border-solid rounded-md text-lg w-2/3 placeholder-transparent focus:outline-ocean"
           />
           <label
@@ -38,6 +68,7 @@ const Register = () => {
             name="email"
             id="email"
             placeholder="email"
+            onChange={(e)=>setEmail(e.target.value)}
             className="peer py-3 px-6 border border-gray-300 border-solid rounded-md text-lg w-2/3 placeholder-transparent focus:outline-ocean"
           />
           <label
@@ -53,6 +84,7 @@ const Register = () => {
             name="password"
             id="password"
             placeholder="password"
+            onChange={(e)=>setPassword(e.target.value)}
             className="peer py-3 px-6 border border-gray-300 border-solid rounded-md text-lg w-2/3 placeholder-transparent focus:outline-ocean"
           />
           <label
@@ -66,6 +98,7 @@ const Register = () => {
           disablePortal
           id="job"
           options={jobs}
+          onChange={(e,v)=>setJob(v)}
           // getOptionLabel={(option) => option.name || ""}
           sx={{
             width: "66.7%",
