@@ -22,7 +22,7 @@ const TopBar = () => {
           <div className="relative before:absolute before:bottom-2/4 before:right-0 before:h-6 before:border-r before:border-slate-300 before:translate-y-2/4"></div>
           <div className="flex justify-around space-x-4 items-center">
             <img
-              src={UserImg}
+              src={currentUser.image}
               alt="user profile"
               className="w-10 h-10 rounded-full"
             />

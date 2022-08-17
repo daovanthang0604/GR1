@@ -3,6 +3,7 @@ import { XIcon } from "@heroicons/react/outline";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../features/modal/modalSlice";
 import { projects } from "../data";
+import { fetchSuccess, fetchFailure } from "../features/task/taskSlice";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 import { createTheme } from "@material-ui/core";
@@ -25,10 +26,17 @@ const CreateTaskModal = () => {
     const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
     await setUsers(res.data);
   }
+  const getAllTasks = async()=>{
+    try {
+      const res = await axios.get("http://localhost:8800/api/tasks/", { withCredentials: true });
+      dispatch(fetchSuccess(res.data))  
+    } catch (error) {
+      dispatch(fetchFailure())      
+    }
+  }
   useEffect(() => {
     getAllUsers()
   }, []);
-
   const handleSubmit = async (e)=>{
     e.preventDefault();
     console.log( title,
@@ -50,6 +58,7 @@ const CreateTaskModal = () => {
         },
         { withCredentials: true }
       );
+      await getAllTasks();
       dispatch(closeModal())
       toast.success("Create task succesfully!");
     } catch (err) {

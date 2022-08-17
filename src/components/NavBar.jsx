@@ -125,7 +125,7 @@ const NavBar = () => {
             }`}
           >
             <img
-              src={UserImg}
+              src={currentUser?.image}
               alt="user profile"
               className="w-10 h-10 rounded-full"
             />

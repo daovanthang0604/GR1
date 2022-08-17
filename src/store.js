@@ -12,6 +12,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import modalReducer from "./features/modal/modalSlice";
 import userReducer from "./features/user/userSlice";
+import taskReducer from "./features/task/taskSlice"
 
 const persistConfig = {
   key: "root",
@@ -19,7 +20,7 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer = combineReducers({ user: userReducer, modal: modalReducer });
+const rootReducer = combineReducers({ user: userReducer, modal: modalReducer, task: taskReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

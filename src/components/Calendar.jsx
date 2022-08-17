@@ -1,9 +1,32 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import UserImg from "./../assets/user.jpg";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
-import { users, tasks } from "./../data";
+// import { tasks } from "./../data";
 import { format, getDaysInMonth } from "date-fns";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSuccess, fetchFailure } from "../features/task/taskSlice";
+import axios from "axios";
 const Calendar = () => {
+  const dispatch = useDispatch();
+  const [users,setUsers] = useState([]);
+  const {tasks} = useSelector((store)=>store.task)
+  //render all users
+  const getAllUsers = async()=>{
+    const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
+    await setUsers(res.data);   
+  }
+  const getAllTasks = async()=>{
+    try {
+      const res = await axios.get("http://localhost:8800/api/tasks/", { withCredentials: true });
+      dispatch(fetchSuccess(res.data))  
+    } catch (error) {
+      dispatch(fetchFailure())      
+    }
+  }
+  useEffect(() => {
+    getAllUsers()
+    getAllTasks()
+  }, []);
   // get today date
   const dt = new Date();
   const [day, setDay] = useState(dt.getDate());
@@ -52,7 +75,7 @@ const Calendar = () => {
         <div className="pt-8 space-y-4">
           <div className="grid grid-flow-col auto-cols-auto h-12 ml-64">
             {days.map((day) => (
-              <div className="w-24 px-8  border-x border-solid border-transparent whitespace-nowrap">
+              <div className="w-24 px-8  border-x border-solid border-transparent whitespace-nowrap" key={day}>
                 <span
                   className={`${
                     day == dt.getDate() &&
@@ -75,17 +98,16 @@ const Calendar = () => {
             let misson = [];
             let startDate,
               endDate = null;
-            const { id, name, image, job } = user;
-            const curTask = tasks.find((task) => task.id == id);
-            if (curTask) {
-              misson = curTask.misson;
-            }
-
+            const { _id, fullName, image, job } = user;
+            tasks.map(task=>{
+              if(task.userId==_id) misson.push(task)
+            })
+            console.log(misson)
             return (
               <div className="grid grid-flow-col auto-rows-auto">
                 <div
                   className="flex space-x-4 items-center border border-solid border-slate-200 py-2 px-8 rounded-xl w-64"
-                  key={id}
+                  key={_id}
                 >
                   <img
                     src={image}
@@ -93,7 +115,7 @@ const Calendar = () => {
                     className="w-10 h-10 rounded-full"
                   />
                   <div>
-                    <h5 className="font-semibold">{name}</h5>
+                    <h5 className="font-semibold">{fullName}</h5>
                     <span className="font-normal text-gray-400">{job}</span>
                   </div>
                 </div>
@@ -109,15 +131,15 @@ const Calendar = () => {
                         new Date(mis.endDate).getDate() -
                         new Date(mis.startDate).getDate() +
                         1;
-                      console.log(
-                        new Date(mis.endDate).getDate() -
-                          new Date(mis.startDate).getDate() +
-                          1
-                      );
+                      // console.log(
+                      //   new Date(mis.endDate).getDate() -
+                      //     new Date(mis.startDate).getDate() +
+                      //     1
+                      // );
                       // if(new Date(mis.startDate).getDate() == day && new Date(mis.endDate).getDate() == day) return <div className="w-full h-3/5 bg-accent z-10 rounded-l-2xl rounded-r-2xl" ></div>
                       // if(new Date(mis.startDate).getDate() == day) return <div className="w-full h-3/5 bg-accent z-10 rounded-l-2xl" ></div>
                       // if(new Date(mis.endDate).getDate() == day) return <div className="w-full h-3/5 bg-accent z-10 rounded-r-2xl" ></div>
-                      console.log(month);
+                      // console.log(month);
                       if (
                         new Date(mis.startDate).getDate() <= day &&
                         day <= new Date(mis.endDate).getDate() &&
@@ -138,10 +160,10 @@ const Calendar = () => {
                               <span className="w-2 h-2 bg-white cursor-pointer rounded-full absolute left-2 after:w-4 after:h-4 after:rounded-full after:border after:border-slate-200 after:absolute after:top-[-0.25rem] after:left-[-0.25rem]"></span>
                             )}
                             <span
-                              className={`absolute top-2/4 translate-y-[-50%] left-6 w-[calc(96px*0.8*${numberDate})] overflow-hidden text-ellipsis`}
+                              className={`absolute top-2/4 translate-y-[-50%] left-6 w-[calc(96px*0.8*${numberDate})] overflow-hidden text-ellipsis first-letter:capitalize`}
                             >
                               {new Date(mis.startDate).getDate() == day &&
-                                mis.name}
+                                mis.title}
                             </span>
                           </div>
                         );
