@@ -2,7 +2,7 @@ import React, { useState,useEffect } from "react";
 import { XIcon } from "@heroicons/react/outline";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../features/modal/modalSlice";
-import { projects } from "../data";
+import { projects,categories } from "../data";
 import { fetchSuccess, fetchFailure } from "../features/task/taskSlice";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
@@ -14,6 +14,7 @@ import {toast} from "react-hot-toast"
 const CreateTaskModal = () => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
+  const [category,setCategory] = useState('');
   const [projectId,setProjectId] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -50,6 +51,7 @@ const CreateTaskModal = () => {
         "http://localhost:8800/api/tasks",
         {
           title,
+          category,
           projectId,
           startDate,
           endDate,
@@ -95,6 +97,24 @@ const CreateTaskModal = () => {
             />
             {title && <XIcon className="w-3 h-3 absolute right-[1.875rem] cursor-pointer" onClick={() => setTitle('')} />}
           </div>
+        </div>
+        <div className={`flex flex-col w-full space-y-2`}>
+          <span className="font-medium">Choose Type</span>
+          <Autocomplete
+            disablePortal
+            id="category"
+            options={categories}
+            getOptionLabel={(option) => option.name || ""}
+            onChange={(e,v)=>{ console.log(v); setCategory(v.name)}}
+            sx={{
+              "& .MuiOutlinedInput-root.Mui-focused": {
+                "& > fieldset": {
+                  borderColor: "#1d5cfc"
+                }
+              }
+            }}
+            renderInput={(params) => <TextField {...params} label="type" />}
+          />
         </div>
         <div className={`flex flex-col w-full space-y-2`}>
           <span className="font-medium">Choose Project</span>

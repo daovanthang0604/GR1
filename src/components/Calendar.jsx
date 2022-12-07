@@ -131,6 +131,7 @@ const Calendar = () => {
                         new Date(mis.endDate).getDate() -
                         new Date(mis.startDate).getDate() +
                         1;
+                        let taskTextLength = 76.8 * numberDate;
                       // console.log(
                       //   new Date(mis.endDate).getDate() -
                       //     new Date(mis.startDate).getDate() +
@@ -160,7 +161,7 @@ const Calendar = () => {
                               <span className="w-2 h-2 bg-white cursor-pointer rounded-full absolute left-2 after:w-4 after:h-4 after:rounded-full after:border after:border-slate-200 after:absolute after:top-[-0.25rem] after:left-[-0.25rem]"></span>
                             )}
                             <span
-                              className={`absolute top-2/4 translate-y-[-50%] left-6 w-[calc(96px*0.8*${numberDate})] overflow-hidden text-ellipsis first-letter:capitalize`}
+                              className={`absolute top-2/4 translate-y-[-50%] left-6 w-[${taskTextLength}px] overflow-hidden text-ellipsis first-letter:capitalize`}
                             >
                               {new Date(mis.startDate).getDate() == day &&
                                 mis.title}

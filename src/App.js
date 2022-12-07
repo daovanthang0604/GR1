@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import CreateTaskModal from "./components/CreateTaskModal";
 import SharedMainLayout from "./components/main/SharedMainLayout";
 import Projects from "./pages/Projects";
+import Boards from "./pages/Boards";
 function App() {
   const { isOpen } = useSelector((store) => store.modal);
   return (
@@ -22,6 +23,7 @@ function App() {
         </Route>
         <Route path="/main" element={<SharedMainLayout />}>
           <Route index element={<Projects />}></Route>
+          <Route path=":/boards" element={<Boards/>} />
         </Route>
       </Routes>
 

@@ -144,3 +144,5 @@ export const projects = [
 export const jobs = [
   'UX Designer', 'UI Designer' , 'Developer' , 'Tester' , 'BA'
 ]
+
+export const categories = [{name: 'To Do', id: '1'}, {name:'In Progress',id: "2"}, {name:'Review',id: "3"},{name: 'Done',id: "4"}];

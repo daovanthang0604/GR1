@@ -4,7 +4,7 @@ const ProjectsTab = () => {
   return (
     <div className="pt-4">
       <ul className="flex space-x-8 text-lg items-center font-normal">
-        <NavLink to="/boards" className="cursor-pointer">
+        <NavLink to=":/boards" className="cursor-pointer">
           Boards
         </NavLink>
         <NavLink to="/calendar" className="tab cursor-pointer">

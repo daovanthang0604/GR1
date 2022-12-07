@@ -10,6 +10,14 @@
     .tab{
         @apply p-2 text-white bg-ocean rounded-md;
     }
+    .text-ellipsis--3{
+        text-overflow:ellipsis;
+        overflow:hidden;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        white-space: normal;
+      }
 }
 .scrollbar::-webkit-scrollbar {
     width: 15px;
