@@ -14,8 +14,11 @@ export const taskSlice = createSlice({
         },
         fetchFailure: (state) =>{
             state.error = false
-        }
+        },
+        updateTasks: (state, action) => {
+            state.tasks = action.payload;
+          }
     }
 })
-export const {fetchSuccess,fetchFailure} = taskSlice.actions;
+export const {fetchSuccess,fetchFailure, updateTasks} = taskSlice.actions;
 export default taskSlice.reducer;
