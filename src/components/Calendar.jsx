@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 // import { tasks } from "./../data";
 import { format, getDaysInMonth } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
+import { openModal } from "../features/modal/modalSlice";
 import { fetchSuccess, fetchFailure } from "../features/task/taskSlice";
 import axios from "axios";
 const Calendar = () => {
@@ -158,7 +159,7 @@ const Calendar = () => {
                             } text-white relative`}
                           >
                             {new Date(mis.startDate).getDate() == day && (
-                              <span className="w-2 h-2 bg-white cursor-pointer rounded-full absolute left-2 after:w-4 after:h-4 after:rounded-full after:border after:border-slate-200 after:absolute after:top-[-0.25rem] after:left-[-0.25rem]"></span>
+                              <span className="w-2 h-2 bg-white cursor-pointer rounded-full absolute left-2 after:w-4 after:h-4 after:rounded-full after:border after:border-slate-200 after:absolute after:top-[-0.25rem] after:left-[-0.25rem]" onClick={()=>dispatch(openModal({modalId: "taskDetails"}))}></span>
                             )}
                             <span
                               className={`absolute top-2/4 translate-y-[-50%] left-6 w-[${taskTextLength}px] overflow-hidden text-ellipsis first-letter:capitalize`}

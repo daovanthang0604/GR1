@@ -166,7 +166,7 @@ const Boards = () => {
             <Droppable droppableId='To Do'>
               {
                 (provided) => (
-                  <div className='bg-orange-100 px-3 rounded-3xl pb-4 w-1/4' ref={provided.innerRef} {...provided.droppableProps}>
+                  <div className={`bg-orange-100 px-3 rounded-3xl pb-4 w-1/4`} ref={provided.innerRef} {...provided.droppableProps}>
                     <div className='flex space-x-2 items-center mt-6'>
                       <p className='w-4 h-4 rounded-md bg-accent'></p>
                       <span className='text-lg font-medium text-accent'>To do</span>
@@ -180,8 +180,11 @@ const Boards = () => {
                         return (
                           <Draggable draggableId={_id} index={index} key={_id}>
                             {
-                              (provided) => (
-                                <div className='bg-white flex flex-col space-y-2 p-4 rounded-xl' ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
+                              (provided,snapshot) => (
+                                <div className='bg-white flex flex-col space-y-2 p-4 rounded-xl' ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps} style={{
+                                  ...provided.draggableProps.style,
+                                  boxShadow: snapshot.isDragging ? '0px 2px 10px rgba(0, 0, 0, 0.2)' : '',
+                                }}>
                                   <div className='flex justify-between items-center'>
                                     <h5 className='font-medium text-lg capitalize'>{title}</h5>
                                     <DotsVerticalIcon className='w-6 h-6' />
@@ -272,8 +275,11 @@ const Boards = () => {
                           return (
                             <Draggable draggableId={_id} index={index} key={_id}>
                               {
-                                (provided) => (
-                                  <div className='bg-white flex flex-col space-y-2 p-4 rounded-xl' ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
+                                (provided,snapshot) => (
+                                  <div className='bg-white flex flex-col space-y-2 p-4 rounded-xl' ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps} style={{
+                                    ...provided.draggableProps.style,
+                                    boxShadow: snapshot.isDragging ? '0px 2px 10px rgba(0, 0, 0, 0.2)' : '',
+                                  }}>
                                     <div className='flex justify-between items-center'>
                                       <h5 className='font-medium text-lg capitalize'>{title}</h5>
                                       <DotsVerticalIcon className='w-6 h-6' />
@@ -316,8 +322,11 @@ const Boards = () => {
                         return (
                           <Draggable draggableId={_id} index={index} key={_id}>
                             {
-                              (provided) => (
-                                <div className='bg-white flex flex-col space-y-2 p-4 rounded-xl' ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
+                              (provided,snapshot) => (
+                                <div className='bg-white flex flex-col space-y-2 p-4 rounded-xl' ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps} style={{
+                                  ...provided.draggableProps.style,
+                                  boxShadow: snapshot.isDragging ? '0px 2px 10px rgba(0, 0, 0, 0.2)' : '',
+                                }}>
                                   <div className='flex justify-between items-center'>
                                     <h5 className='font-medium text-lg capitalize'>{title}</h5>
                                     <DotsVerticalIcon className='w-6 h-6' />

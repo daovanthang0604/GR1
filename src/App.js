@@ -13,7 +13,6 @@ import SharedMainLayout from "./components/main/SharedMainLayout";
 import Projects from "./pages/Projects";
 import Boards from "./pages/Boards";
 function App() {
-  const { isOpen } = useSelector((store) => store.modal);
   return (
     <BrowserRouter>
       <Routes>

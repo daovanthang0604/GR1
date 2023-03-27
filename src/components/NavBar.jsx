@@ -113,7 +113,7 @@ const NavBar = () => {
           className={`w-10 h-10 text-white rounded-full bg-ocean p-1.5 cursor-pointer ${
             toggle && "shrink-0"
           }`}
-          onClick={() => dispatch(openModal())}
+          onClick={() => dispatch(openModal({ modalId: "createTaskModal" }))}
         />
       </div>
       {/* User profile */}

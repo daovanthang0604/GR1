@@ -12,6 +12,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import axios from "axios";
 import {toast} from "react-hot-toast"
 const CreateTaskModal = () => {
+  const modalId = 'createTaskModal';
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
   const [category,setCategory] = useState('');
@@ -61,7 +62,7 @@ const CreateTaskModal = () => {
         { withCredentials: true }
       );
       await getAllTasks();
-      dispatch(closeModal())
+      dispatch(closeModal({ modalId: "createTaskModal" }));
       toast.success("Create task succesfully!");
     } catch (err) {
       console.log(err);
@@ -84,7 +85,7 @@ const CreateTaskModal = () => {
           <span className="font-medium text-xl">Create a new task</span>
           <XIcon
             className="w-6 h-6 cursor-pointer"
-            onClick={() => dispatch(closeModal())}
+            onClick={() => dispatch(closeModal({ modalId: "createTaskModal" }))}
           />
         </div>
         {/* Task name */}
