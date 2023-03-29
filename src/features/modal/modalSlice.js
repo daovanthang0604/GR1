@@ -10,10 +10,16 @@ const modalSlice = createSlice({
   reducers: {
     openModal: (state, action) => {
       const { modalId } = action.payload;
+      if (!state.modals) {
+        state.modals = {};
+      }
       state.modals[modalId] = true;
     },
     closeModal: (state, action) => {
       const { modalId } = action.payload;
+      if (!state.modals) {
+        state.modals = {};
+      }
       state.modals[modalId] = false;
     }
   }

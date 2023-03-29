@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import UserImg from "./../assets/user.jpg";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 // import { tasks } from "./../data";
@@ -6,27 +6,34 @@ import { format, getDaysInMonth } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal } from "../features/modal/modalSlice";
 import { fetchSuccess, fetchFailure } from "../features/task/taskSlice";
+import { setTask } from "../features/task/taskDetailSlice";
+import { setAllUsers } from "../features/user/usersSlice";
 import axios from "axios";
 const Calendar = () => {
   const dispatch = useDispatch();
-  const [users,setUsers] = useState([]);
-  const {tasks} = useSelector((store)=>store.task)
+  const [users, setUsers] = useState([]);
+  const { tasks } = useSelector((store) => store.task);
   //render all users
-  const getAllUsers = async()=>{
-    const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
-    await setUsers(res.data);   
-  }
-  const getAllTasks = async()=>{
+  const getAllUsers = async () => {
+    const res = await axios.get("http://localhost:8800/api/users/", {
+      withCredentials: true,
+    });
+    await setUsers(res.data);
+    await dispatch(setAllUsers(res.data))
+  };
+  const getAllTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/api/tasks/", { withCredentials: true });
-      dispatch(fetchSuccess(res.data))  
+      const res = await axios.get("http://localhost:8800/api/tasks/", {
+        withCredentials: true,
+      });
+      dispatch(fetchSuccess(res.data));
     } catch (error) {
-      dispatch(fetchFailure())      
+      dispatch(fetchFailure());
     }
-  }
+  };
   useEffect(() => {
-    getAllUsers()
-    getAllTasks()
+    getAllUsers();
+    getAllTasks();
   }, []);
   // get today date
   const dt = new Date();
@@ -76,7 +83,10 @@ const Calendar = () => {
         <div className="pt-8 space-y-4">
           <div className="grid grid-flow-col auto-cols-auto h-12 ml-64">
             {days.map((day) => (
-              <div className="w-24 px-8  border-x border-solid border-transparent whitespace-nowrap" key={day}>
+              <div
+                className="w-24 px-8  border-x border-solid border-transparent whitespace-nowrap"
+                key={day}
+              >
                 <span
                   className={`${
                     day == dt.getDate() &&
@@ -100,10 +110,10 @@ const Calendar = () => {
             let startDate,
               endDate = null;
             const { _id, fullName, image, job } = user;
-            tasks.map(task=>{
-              if(task.userId==_id) misson.push(task)
-            })
-            console.log(misson)
+            tasks.map((task) => {
+              if (task.userId == _id) misson.push(task);
+            });
+            console.log(misson);
             return (
               <div className="grid grid-flow-col auto-rows-auto">
                 <div
@@ -132,7 +142,7 @@ const Calendar = () => {
                         new Date(mis.endDate).getDate() -
                         new Date(mis.startDate).getDate() +
                         1;
-                        let taskTextLength = 76.8 * numberDate;
+                      let taskTextLength = 76.8 * numberDate;
                       // console.log(
                       //   new Date(mis.endDate).getDate() -
                       //     new Date(mis.startDate).getDate() +
@@ -159,7 +169,15 @@ const Calendar = () => {
                             } text-white relative`}
                           >
                             {new Date(mis.startDate).getDate() == day && (
-                              <span className="w-2 h-2 bg-white cursor-pointer rounded-full absolute left-2 after:w-4 after:h-4 after:rounded-full after:border after:border-slate-200 after:absolute after:top-[-0.25rem] after:left-[-0.25rem]" onClick={()=>dispatch(openModal({modalId: "taskDetails"}))}></span>
+                              <span
+                                className="w-2 h-2 bg-white cursor-pointer rounded-full absolute left-2 after:w-4 after:h-4 after:rounded-full after:border after:border-slate-200 after:absolute after:top-[-0.25rem] after:left-[-0.25rem]"
+                                onClick={() => {
+                                  dispatch(
+                                    openModal({ modalId: "taskDetails" })
+                                  );
+                                  dispatch(setTask(mis));
+                                }}
+                              ></span>
                             )}
                             <span
                               className={`absolute top-2/4 translate-y-[-50%] left-6 w-[${taskTextLength}px] overflow-hidden text-ellipsis first-letter:capitalize`}
