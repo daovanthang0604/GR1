@@ -15,13 +15,15 @@ import userReducer from "./features/user/userSlice";
 import taskReducer from "./features/task/taskSlice"
 import taskDetailReducer from "./features/task/taskDetailSlice"
 import usersReducer from "./features/user/usersSlice"
+import projectReducer from "./features/project/projectSlice"
+import projectDetailReducer from "./features/project/projectDetailSlice"
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
 };
 
-const rootReducer = combineReducers({ user: userReducer, modal: modalReducer, task: taskReducer, taskDetail: taskDetailReducer,users: usersReducer });
+const rootReducer = combineReducers({ user: userReducer, modal: modalReducer, task: taskReducer, taskDetail: taskDetailReducer,users: usersReducer, project: projectReducer, projectDetail: projectDetailReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

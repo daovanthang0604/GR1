@@ -23,7 +23,9 @@ function App() {
         </Route>
         <Route path="/main" element={<SharedMainLayout />}>
           <Route index element={<Project />}></Route>
-          <Route path=":/boards" element={<Boards/>} />
+          <Route path="projects/:projectId" element={<Projects />}>
+          </Route>
+          <Route path="projects/:projectId/boards" element={<Boards />} />
         </Route>
       </Routes>
 

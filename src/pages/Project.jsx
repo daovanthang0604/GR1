@@ -1,9 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import User1 from "./../assets/Users/1.jpg";
 import User2 from "./../assets/Users/2.jpg";
 import User3 from "./../assets/Users/3.jpg";
+import { format } from "date-fns";
+import {
+  fetchSuccess,
+  fetchFailure,
+  updateProjects,
+} from "../features/project/projectSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setProject } from "../features/project/projectDetailSlice";
+import axios from "axios";
+import { Link} from "react-router-dom";
 const Project = () => {
+  const dispatch = useDispatch();
+  const { projects } = useSelector((store) => store.project);
+  const {users} = useSelector((store)=>store.users);
+  const getAllProject = async () => {
+    try {
+      const res = await axios.get("http://localhost:8800/api/projects/", {
+        withCredentials: true,
+      });
+      dispatch(fetchSuccess(res.data));
+    } catch (error) {
+      dispatch(fetchFailure());
+    }
+  };
+  useEffect(() => {
+    getAllProject();
+  }, []);
+  console.log(projects);
   return (
     <div className="mt-8">
       <div className="flex justify-between items-center">
@@ -12,388 +39,73 @@ const Project = () => {
           <button className="bg-ocean text-white p-2 ">Create Project</button>
         </div>
       </div>
-      <div className="grid lg:grid-cols-3 grid-cols-2 lg:gap-5 gap-3 mt-8 overflow-y-auto scrollbar h-[85vh]">
-        <div className="border shadow-md p-4 border-gray-200">
-          <div className="flex justify-between">
-            {/* Start Date */}
-            <span className="text-gray-400 font-extralight">Feb 14 2023</span>
-            <DotsHorizontalIcon className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col justify-center space-y-2">
-            <div className="flex justify-center">
-              <img
-                src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
-                alt=""
-                className="w-20 h-20"
-              />
-            </div>
-            {/* Title of Project */}
-            <div>
-              <h3 className="capitalize text-center font-medium text-lg">
-                User Interface design
-              </h3>
-            </div>
-            {/* Number of Members */}
-            <div className="flex items-center justify-center translate-x-[1rem]">
-              <img
-                src={User1}
-                alt=""
-                className="w-8 h-8 rounded-full border-white border"
-              />
-              <img
-                src={User2}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-0.75rem] border-white border"
-              />
-              <img
-                src={User3}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-1.5rem] border-white border"
-              />
-              <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
-                +15
+      <div className="grid lg:grid-cols-3 grid-cols-2 lg:gap-5 gap-3 mt-8 overflow-y-auto max-h-[80vh] scrollbar">
+        {projects.map((project) => {
+          const membersInProject = project.members.flatMap(memberId => users.find(user => user._id === memberId) || []);
+          const showedMember = membersInProject.splice(0,3)
+          console.log(showedMember)
+          console.log(membersInProject)
+          return (
+            <div
+              className="border shadow-md p-4 border-gray-200"
+              key={project._id}
+            >
+              <div className="flex justify-between">
+                {/* Start Date */}
+                <span className="text-gray-400 font-extralight">
+                {format(new Date(project.startDate), 'MMM dd yyyy')}
+                </span>
+                <DotsHorizontalIcon className="w-6 h-6" />
+              </div>
+              <div className="flex flex-col justify-center space-y-2">
+                <div className="flex justify-center">
+                  <img
+                    src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
+                    alt=""
+                    className="w-20 h-20"
+                  />
+                </div>
+                {/* Title of Project */}
+                <div>
+                  <h3 className="capitalize text-center font-medium text-lg">
+                    {project.name}
+                  </h3>
+                </div>
+                {/* Number of Members */}
+                <div className="flex items-center justify-center translate-x-[1rem]">
+                  {
+                    showedMember.map((mem,index)=>{
+                      return(<img
+                        src={mem.image}
+                        alt=""
+                        className={`w-8 h-8 rounded-full border-white border translate-x-[${-0.75*index}rem]`}
+                      />)
+                    })
+                  }
+                 {(project.members.length >= 4) && <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
+                    +{project.members.length - 3}
+                  </div>} 
+                </div>
+                {/* Status of Project */}
+                <div className="flex justify-center">
+                  <span className={`text-sm ${(project.status === "Active") && "text-green-400"} ${(project.status === "In Progress") && "text-sun"} font-medium`}>
+                    {project.status}
+                  </span>
+                </div>
+                <div className="flex justify-center mt-2">
+                  <hr className="w-[50%]" />
+                </div>
+              </div>
+              <div className="flex justify-around mt-8 mb-4">
+                <span className="text-gray-400">Add people</span>
+                <Link to={`/main/projects/${project._id}`}>
+                <span className="text-gray-400" onClick={()=>dispatch(setProject(project))}>Details</span>
+                </Link>
+                
               </div>
             </div>
-            {/* Status of Project */}
-            <div className="flex justify-center">
-              <span className="text-sm text-sun font-medium">In Progress</span>
-            </div>
-            <div className="flex justify-center mt-2">
-              <hr className="w-[50%]" />
-            </div>
-          </div>
-          <div className="flex justify-around mt-8 mb-4">
-            <span className="text-gray-400">Add people</span>
-            <span className="text-gray-400">Details</span>
-          </div>
-        </div>
-        <div className="border shadow-md p-4 border-gray-200">
-          <div className="flex justify-between">
-            {/* Start Date */}
-            <span className="text-gray-400 font-extralight">Feb 14 2023</span>
-            <DotsHorizontalIcon className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col justify-center space-y-2">
-            <div className="flex justify-center">
-              <img
-                src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
-                alt=""
-                className="w-20 h-20"
-              />
-            </div>
-            {/* Title of Project */}
-            <div>
-              <h3 className="capitalize text-center font-medium text-lg">
-                User Interface design
-              </h3>
-            </div>
-            {/* Number of Members */}
-            <div className="flex items-center justify-center translate-x-[1rem]">
-              <img
-                src={User1}
-                alt=""
-                className="w-8 h-8 rounded-full border-white border"
-              />
-              <img
-                src={User2}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-0.75rem] border-white border"
-              />
-              <img
-                src={User3}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-1.5rem] border-white border"
-              />
-              <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
-                +15
-              </div>
-            </div>
-            {/* Status of Project */}
-            <div className="flex justify-center">
-              <span className="text-sm text-sun font-medium">In Progress</span>
-            </div>
-            <div className="flex justify-center mt-2">
-              <hr className="w-[50%]" />
-            </div>
-          </div>
-          <div className="flex justify-around mt-8 mb-4">
-            <span className="text-gray-400">Add people</span>
-            <span className="text-gray-400">Details</span>
-          </div>
-        </div>
-        <div className="border shadow-md p-4 border-gray-200">
-          <div className="flex justify-between">
-            {/* Start Date */}
-            <span className="text-gray-400 font-extralight">Feb 14 2023</span>
-            <DotsHorizontalIcon className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col justify-center space-y-2">
-            <div className="flex justify-center">
-              <img
-                src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
-                alt=""
-                className="w-20 h-20"
-              />
-            </div>
-            {/* Title of Project */}
-            <div>
-              <h3 className="capitalize text-center font-medium text-lg">
-                User Interface design
-              </h3>
-            </div>
-            {/* Number of Members */}
-            <div className="flex items-center justify-center translate-x-[1rem]">
-              <img
-                src={User1}
-                alt=""
-                className="w-8 h-8 rounded-full border-white border"
-              />
-              <img
-                src={User2}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-0.75rem] border-white border"
-              />
-              <img
-                src={User3}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-1.5rem] border-white border"
-              />
-              <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
-                +15
-              </div>
-            </div>
-            {/* Status of Project */}
-            <div className="flex justify-center">
-              <span className="text-sm text-sun font-medium">In Progress</span>
-            </div>
-            <div className="flex justify-center mt-2">
-              <hr className="w-[50%]" />
-            </div>
-          </div>
-          <div className="flex justify-around mt-8 mb-4">
-            <span className="text-gray-400">Add people</span>
-            <span className="text-gray-400">Details</span>
-          </div>
-        </div>
-        <div className="border shadow-md p-4 border-gray-200">
-          <div className="flex justify-between">
-            {/* Start Date */}
-            <span className="text-gray-400 font-extralight">Feb 14 2023</span>
-            <DotsHorizontalIcon className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col justify-center space-y-2">
-            <div className="flex justify-center">
-              <img
-                src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
-                alt=""
-                className="w-20 h-20"
-              />
-            </div>
-            {/* Title of Project */}
-            <div>
-              <h3 className="capitalize text-center font-medium text-lg">
-                User Interface design
-              </h3>
-            </div>
-            {/* Number of Members */}
-            <div className="flex items-center justify-center translate-x-[1rem]">
-              <img
-                src={User1}
-                alt=""
-                className="w-8 h-8 rounded-full border-white border"
-              />
-              <img
-                src={User2}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-0.75rem] border-white border"
-              />
-              <img
-                src={User3}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-1.5rem] border-white border"
-              />
-              <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
-                +15
-              </div>
-            </div>
-            {/* Status of Project */}
-            <div className="flex justify-center">
-              <span className="text-sm text-sun font-medium">In Progress</span>
-            </div>
-            <div className="flex justify-center mt-2">
-              <hr className="w-[50%]" />
-            </div>
-          </div>
-          <div className="flex justify-around mt-8 mb-4">
-            <span className="text-gray-400">Add people</span>
-            <span className="text-gray-400">Details</span>
-          </div>
-        </div>
-        <div className="border shadow-md p-4 border-gray-200">
-          <div className="flex justify-between">
-            {/* Start Date */}
-            <span className="text-gray-400 font-extralight">Feb 14 2023</span>
-            <DotsHorizontalIcon className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col justify-center space-y-2">
-            <div className="flex justify-center">
-              <img
-                src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
-                alt=""
-                className="w-20 h-20"
-              />
-            </div>
-            {/* Title of Project */}
-            <div>
-              <h3 className="capitalize text-center font-medium text-lg">
-                User Interface design
-              </h3>
-            </div>
-            {/* Number of Members */}
-            <div className="flex items-center justify-center translate-x-[1rem]">
-              <img
-                src={User1}
-                alt=""
-                className="w-8 h-8 rounded-full border-white border"
-              />
-              <img
-                src={User2}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-0.75rem] border-white border"
-              />
-              <img
-                src={User3}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-1.5rem] border-white border"
-              />
-              <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
-                +15
-              </div>
-            </div>
-            {/* Status of Project */}
-            <div className="flex justify-center">
-              <span className="text-sm text-sun font-medium">In Progress</span>
-            </div>
-            <div className="flex justify-center mt-2">
-              <hr className="w-[50%]" />
-            </div>
-          </div>
-          <div className="flex justify-around mt-8 mb-4">
-            <span className="text-gray-400">Add people</span>
-            <span className="text-gray-400">Details</span>
-          </div>
-        </div>
-        <div className="border shadow-md p-4 border-gray-200">
-          <div className="flex justify-between">
-            {/* Start Date */}
-            <span className="text-gray-400 font-extralight">Feb 14 2023</span>
-            <DotsHorizontalIcon className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col justify-center space-y-2">
-            <div className="flex justify-center">
-              <img
-                src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
-                alt=""
-                className="w-20 h-20"
-              />
-            </div>
-            {/* Title of Project */}
-            <div>
-              <h3 className="capitalize text-center font-medium text-lg">
-                User Interface design
-              </h3>
-            </div>
-            {/* Number of Members */}
-            <div className="flex items-center justify-center translate-x-[1rem]">
-              <img
-                src={User1}
-                alt=""
-                className="w-8 h-8 rounded-full border-white border"
-              />
-              <img
-                src={User2}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-0.75rem] border-white border"
-              />
-              <img
-                src={User3}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-1.5rem] border-white border"
-              />
-              <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
-                +15
-              </div>
-            </div>
-            {/* Status of Project */}
-            <div className="flex justify-center">
-              <span className="text-sm text-sun font-medium">In Progress</span>
-            </div>
-            <div className="flex justify-center mt-2">
-              <hr className="w-[50%]" />
-            </div>
-          </div>
-          <div className="flex justify-around mt-8 mb-4">
-            <span className="text-gray-400">Add people</span>
-            <span className="text-gray-400">Details</span>
-          </div>
-        </div>
-        <div className="border shadow-md p-4 border-gray-200">
-          <div className="flex justify-between">
-            {/* Start Date */}
-            <span className="text-gray-400 font-extralight">Feb 14 2023</span>
-            <DotsHorizontalIcon className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col justify-center space-y-2">
-            <div className="flex justify-center">
-              <img
-                src="https://cdn.dribbble.com/users/2162265/screenshots/5816007/media/5ce9f7fbfc412dc21ecacfb6798176a9.png?compress=1&resize=400x300&vertical=top"
-                alt=""
-                className="w-20 h-20"
-              />
-            </div>
-            {/* Title of Project */}
-            <div>
-              <h3 className="capitalize text-center font-medium text-lg">
-                User Interface design
-              </h3>
-            </div>
-            {/* Number of Members */}
-            <div className="flex items-center justify-center translate-x-[1rem]">
-              <img
-                src={User1}
-                alt=""
-                className="w-8 h-8 rounded-full border-white border"
-              />
-              <img
-                src={User2}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-0.75rem] border-white border"
-              />
-              <img
-                src={User3}
-                alt=""
-                className="w-8 h-8 rounded-full translate-x-[-1.5rem] border-white border"
-              />
-              <div className="w-8 h-8 translate-x-[-2.25rem] text-xs bg-tertiary rounded-full text-white flex items-center justify-center border-white border">
-                +15
-              </div>
-            </div>
-            {/* Status of Project */}
-            <div className="flex justify-center">
-              <span className="text-sm text-sun font-medium">In Progress</span>
-            </div>
-            <div className="flex justify-center mt-2">
-              <hr className="w-[50%]" />
-            </div>
-          </div>
-          <div className="flex justify-around mt-8 mb-4">
-            <span className="text-gray-400">Add people</span>
-            <span className="text-gray-400">Details</span>
-          </div>
-        </div>
-        <div>Content</div>
-        <div>Content</div>
-        <div>Content</div>
+          );
+        })}
       </div>
     </div>
   );

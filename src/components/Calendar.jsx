@@ -13,6 +13,8 @@ const Calendar = () => {
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const { tasks } = useSelector((store) => store.task);
+  const {project} = useSelector((store)=> store.projectDetail)
+  console.log(project)
   //render all users
   const getAllUsers = async () => {
     const res = await axios.get("http://localhost:8800/api/users/", {
