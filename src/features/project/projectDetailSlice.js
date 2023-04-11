@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     project: null,
+    membersInProject: null
 }
 
 export const projectSlice = createSlice({
@@ -10,8 +11,11 @@ export const projectSlice = createSlice({
     reducers: {
         setProject: (state,action)=>{
             state.project = action.payload;
+        },
+        setMembers: (state,action)=>{
+            state.membersInProject = action.payload;
         }
     }
 })
-export const {setProject} = projectSlice.actions;
+export const {setProject,setMembers} = projectSlice.actions;
 export default projectSlice.reducer;
