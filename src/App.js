@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import CreateTaskModal from "./components/CreateTaskModal";
 import SharedMainLayout from "./components/main/SharedMainLayout";
 import Projects from "./pages/Projects";
+import Project from "./pages/Project";
 import Boards from "./pages/Boards";
 function App() {
   return (
@@ -21,8 +22,10 @@ function App() {
           <Route path="/register" element={<Register />} />
         </Route>
         <Route path="/main" element={<SharedMainLayout />}>
-          <Route index element={<Projects />}></Route>
-          <Route path=":/boards" element={<Boards/>} />
+          <Route index element={<Project />}></Route>
+          <Route path="projects/:projectId" element={<Projects />}>
+          </Route>
+          <Route path="projects/:projectId/boards" element={<Boards />} />
         </Route>
       </Routes>
 

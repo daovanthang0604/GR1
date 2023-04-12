@@ -5,36 +5,15 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import { format, getDaysInMonth } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal } from "../features/modal/modalSlice";
-import { fetchSuccess, fetchFailure } from "../features/task/taskSlice";
 import { setTask } from "../features/task/taskDetailSlice";
-import { setAllUsers } from "../features/user/usersSlice";
-import axios from "axios";
 const Calendar = () => {
   const dispatch = useDispatch();
-  const [users, setUsers] = useState([]);
   const { tasks } = useSelector((store) => store.task);
-  //render all users
-  const getAllUsers = async () => {
-    const res = await axios.get("http://localhost:8800/api/users/", {
-      withCredentials: true,
-    });
-    await setUsers(res.data);
-    await dispatch(setAllUsers(res.data))
-  };
-  const getAllTasks = async () => {
-    try {
-      const res = await axios.get("http://localhost:8800/api/tasks/", {
-        withCredentials: true,
-      });
-      dispatch(fetchSuccess(res.data));
-    } catch (error) {
-      dispatch(fetchFailure());
-    }
-  };
-  useEffect(() => {
-    getAllUsers();
-    getAllTasks();
-  }, []);
+  const {project} = useSelector((store)=> store.projectDetail)
+  const {membersInProject} = useSelector((store)=> store.projectDetail)
+  const [users, setUsers] = useState(membersInProject);
+  const tasksInProject = tasks.filter(task=>task.projectId === project._id);
+  console.log(tasksInProject)
   // get today date
   const dt = new Date();
   const [day, setDay] = useState(dt.getDate());
@@ -110,7 +89,7 @@ const Calendar = () => {
             let startDate,
               endDate = null;
             const { _id, fullName, image, job } = user;
-            tasks.map((task) => {
+            tasksInProject.map((task) => {
               if (task.userId == _id) misson.push(task);
             });
             console.log(misson);

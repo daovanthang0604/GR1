@@ -1,24 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    tasks: [],
+    projects: [],
     error: false
 }
 
-export const taskSlice = createSlice({
-    name: "task",
+export const projectSlice = createSlice({
+    name: "project",
     initialState,
     reducers: {
         fetchSuccess: (state,action)=>{
-            state.tasks = action.payload;
+            state.projects = action.payload;
         },
         fetchFailure: (state) =>{
             state.error = true
         },
-        updateTasks: (state, action) => {
+        updateProjects: (state, action) => {
             state.tasks = action.payload;
           }
     }
 })
-export const {fetchSuccess,fetchFailure, updateTasks} = taskSlice.actions;
-export default taskSlice.reducer;
+export const {fetchSuccess,fetchFailure, updateProjects} = projectSlice.actions;
+export default projectSlice.reducer;

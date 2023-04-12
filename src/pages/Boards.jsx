@@ -11,33 +11,18 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 const Boards = () => {
   const dispatch = useDispatch();
   const { tasks } = useSelector((store) => store.task)
-  const [users, setUsers] = useState([]);
-  const getAllUsers = async () => {
-    const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
-    await setUsers(res.data);
-  }
-  // const getAllTasks = async()=>{
-  //   try {
-  //     const res = await axios.get("http://localhost:8800/api/tasks/", { withCredentials: true });
-  //     dispatch(fetchSuccess(res.data))  
-  //   } catch (error) {
-  //     dispatch(fetchFailure())      
-  //   }
-  // }
-  useEffect(() => {
-    getAllUsers()
-  }, []);
-  console.log(users)
+  const { users } = useSelector((store) => store.users);
+  const {project} = useSelector((store)=> store.projectDetail)
+  const tasksInProject = tasks.filter(task=>task.projectId === project._id);
   // sort the board based on the priority
-  const toDo = tasks.filter(t => t.category == "To Do");
+  const toDo = tasksInProject.filter(t => t.category == "To Do");
   toDo.sort((a, b) => a.priority - b.priority);
-  const inProgress = tasks.filter(t => t.category == "In Progress");
+  const inProgress = tasksInProject.filter(t => t.category == "In Progress");
   inProgress.sort((a, b) => a.priority - b.priority);
-  const review = tasks.filter(t => t.category == "Review");
+  const review = tasksInProject.filter(t => t.category == "Review");
   review.sort((a, b) => a.priority - b.priority);
-  const done = tasks.filter(t => t.category == "Done");
+  const done = tasksInProject.filter(t => t.category == "Done");
   done.sort((a, b) => a.priority - b.priority);
-  console.log(done);
   //update task when user drop
   const updateTaskOnServer = async (task) => {
     try {
@@ -50,7 +35,6 @@ const Boards = () => {
   // Logic when user drag and drop
   const onDragEnd = (result) => {
     const { source, destination, draggableId } = result;
-    console.log(destination)
     // Ignore the drag if the item is dropped outside of any droppable area
     if (!destination) {
       return;
@@ -80,15 +64,12 @@ const Boards = () => {
       category: finish,
       priority: destination.index,
     };
-    console.log(source.index, destination.index);
-    console.log(start, finish);
     const tasksToUpdate = [];
     // if task is moved within the same category
     if (start === finish) {
       const removeTaskIndex = [];
       const filteredTasks = newTasks.filter(task => task.category === finish);
       filteredTasks.sort((a, b) => a.priority - b.priority);
-      console.log(filteredTasks)
       for (let i = Math.min(source.index, destination.index); i < Math.max(source.index, destination.index); i++) {
         removeTaskIndex.push(newTasks.findIndex((task) => task._id === filteredTasks[i]._id));
         const task = filteredTasks[i];
@@ -107,16 +88,13 @@ const Boards = () => {
       removeTaskIndex.map(index => {
         newTasks.splice(index, 1)
       })
-      console.log(tasksToUpdate)
       newTasks.push(...tasksToUpdate);
       tasksToUpdate.push(updatedTask);
-      console.log(tasksToUpdate)
     } else {
       const removeTaskIndex = [];
       const filteredTasks = newTasks.filter(task => task.category === finish);
       filteredTasks.sort((a, b) => a.priority - b.priority);
       for(let i=destination.index;i<filteredTasks.length;i++){
-        console.log(filteredTasks[i]);
         removeTaskIndex.push(newTasks.findIndex((task) => task._id === filteredTasks[i]._id));
         const task = filteredTasks[i];
         tasksToUpdate.push({
@@ -140,15 +118,11 @@ const Boards = () => {
       removeTaskIndex.map(index => {
         newTasks.splice(index, 1)
       })
-      console.log(tasksToUpdate)
       newTasks.push(...tasksToUpdate);
       tasksToUpdate.push(updatedTask);
   }
-    console.log(newTasks)
     // Insert the updatedTask at the destination position
     newTasks.splice(destination.index, 0, updatedTask);
-    console.log(tasksToUpdate)
-    console.log(newTasks);
     tasksToUpdate.forEach(async (task) => {
       await updateTaskOnServer(task);
     });
