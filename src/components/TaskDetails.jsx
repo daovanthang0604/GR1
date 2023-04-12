@@ -71,7 +71,7 @@ const TaskDetails = () => {
     await toast.success("Commented",{duration: 2000})
   };
   return (
-    <div className="fixed top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] z-30 bg-white max-h-[80%] lg:w-1/3 w-96 rounded-md">
+    <div className="fixed top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] z-30 bg-white max-h-[85%] lg:w-1/3 w-96 rounded-md">
       <div className="flex flex-col py-4 px-8">
         <div className="flex justify-between">
           <span>Project Name</span>
