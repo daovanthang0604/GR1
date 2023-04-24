@@ -5,14 +5,20 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/outline";
 import { useSelector } from "react-redux";
-import UserImg from "./../assets/user.jpg";
+import { useLocation } from 'react-router-dom';
 const TopBar = () => {
   const { currentUser } = useSelector((store) => store.user);
+  const location = useLocation();
+  const currentRoute = location.pathname;
+  let currentTitle = '';
+  console.log(currentRoute.split('/'))
+  if(currentRoute.split('/').includes('dashboard')) currentTitle = 'Dashboard';
+  else if (currentRoute.split('/').includes('projects ')) currentTitle = 'Projects';
   return (
     <header className="w-full h-fit">
       <div className="flex justify-between items-center leading-6">
         <div>
-          <span className="text-xl font-medium">Projects</span>
+          <span className="text-xl font-medium">{currentTitle}</span>
         </div>
         <div className="flex justify-around space-x-8">
           <div className="flex items-center space-x-8">

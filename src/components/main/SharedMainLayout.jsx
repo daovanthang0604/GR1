@@ -16,13 +16,9 @@ const SharedMainLayout = () => {
   const isOpen = useSelector((state) => isModalOpen(state.modal, modalId));
   const taskDetailsModalId = 'taskDetails';
   const isTaskDetailsOpen = useSelector((state) => isModalOpen(state.modal, taskDetailsModalId));
-<<<<<<< HEAD
-  console.log(isTaskDetailsOpen);
-=======
   const addMemberModalId = 'addMember';
   const isAddMemberOpen = useSelector((state)=> isModalOpen(state.modal, addMemberModalId));
   console.log(isOpen);
->>>>>>> 8ba3b779688013704d5b93b2940f8e518035726c
   return (
     <>
       {" "}

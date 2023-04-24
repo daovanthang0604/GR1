@@ -87,9 +87,7 @@ const Project = () => {
                       <img
                         src={mem.image}
                         alt=""
-                        className={`w-8 h-8 rounded-full border-white border translate-x-[${
-                          -0.75 * index
-                        }rem]`}
+                        className={`w-8 h-8 rounded-full border-white ${index === 1 && 'translate-x-[-0.75rem]'}  ${index === 2 && 'translate-x-[-1.5rem]'} border`}
                       />
                     );
                   })}

@@ -13,6 +13,7 @@ import SharedMainLayout from "./components/main/SharedMainLayout";
 import Projects from "./pages/Projects";
 import Project from "./pages/Project";
 import Boards from "./pages/Boards";
+import Dashboard from "./pages/Dashboard";
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +27,7 @@ function App() {
           <Route path="projects/:projectId" element={<Projects />}>
           </Route>
           <Route path="projects/:projectId/boards" element={<Boards />} />
+          <Route path="dashboard" element={<Dashboard/>}></Route>
         </Route>
       </Routes>
 
