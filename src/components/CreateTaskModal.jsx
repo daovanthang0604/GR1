@@ -1,8 +1,8 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import { XIcon } from "@heroicons/react/outline";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../features/modal/modalSlice";
-import { projects,categories } from "../data";
+import { categories } from "../data";
 import { fetchSuccess, fetchFailure } from "../features/task/taskSlice";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
@@ -11,18 +11,27 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from "axios";
 import {toast} from "react-hot-toast"
+import emailjs from '@emailjs/browser';
 const CreateTaskModal = () => {
   const modalId = 'createTaskModal';
+  const form = useRef();
   const dispatch = useDispatch();
+  const { projects } = useSelector((store) => store.project);
   const [title, setTitle] = useState('');
   const [category,setCategory] = useState('');
   const [projectId,setProjectId] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [description, setDescription] = useState('');
-  const [userId,setUserId] = useState('');
-  const [users,setUsers] = useState(null);
+  const [userId,setUserId] = useState([]);
+  const [users,setUsers] = useState('');
   
+  // get the member of the project so that we only assign to the member of that projecct
+  const project = projects.find(p => p._id === projectId);
+  const usersInProject = project?.members.flatMap(p=>{
+    return users.filter(user=> user._id === p)
+  }) || '';
+  console.log(usersInProject)
   //render all users
   const getAllUsers = async()=>{
     const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
@@ -61,6 +70,22 @@ const CreateTaskModal = () => {
         },
         { withCredentials: true }
       );
+      console.log(form.current)
+      userId.forEach(uId=>{
+        const member = users.find(user=> user._id === uId);
+        const templateParams = {
+          title: title,
+          project: project.name,
+          description: description,
+          member: member.email 
+      };
+      emailjs.send('service_s2xj7d1', 'template_urpi7zr', templateParams, 's8Y1Wa4KaD86XYQGe')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+      })
       await getAllTasks();
       dispatch(closeModal({ modalId: "createTaskModal" }));
       toast.success("Create task succesfully!");
@@ -77,9 +102,14 @@ const CreateTaskModal = () => {
       }
     },
   })
+
+  const addMember = (value) =>{
+    const v = value.map(val => val._id);
+    setUserId(v);
+  }
   return (
     <div className="fixed top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] z-30 bg-white lg:w-1/3 w-96 rounded-md">
-      <form className="flex flex-col p-8 space-y-4 mb-4">
+      <form className="flex flex-col p-8 space-y-4 mb-4" ref={form}>
         {/* modal title */}
         <div className="flex justify-between items-center">
           <span className="font-medium text-xl">Create a new task</span>
@@ -124,7 +154,7 @@ const CreateTaskModal = () => {
             id="project"
             options={projects}
             getOptionLabel={(option) => option.name || ""}
-            onChange={(e,v)=>setProjectId(v.name)}
+            onChange={(e,v)=>setProjectId(v._id)}
             sx={{
               "& .MuiOutlinedInput-root.Mui-focused": {
                 "& > fieldset": {
@@ -132,7 +162,7 @@ const CreateTaskModal = () => {
                 }
               }
             }}
-            renderInput={(params) => <TextField {...params} label="project" />}
+            renderInput={(params) => <TextField {...params} label="project" name="project"/>}
           />
         </div>
         {/* pick start and end time for task */}
@@ -176,11 +206,9 @@ const CreateTaskModal = () => {
         <div className="flex flex-col">
           <span className="font-medium">Assign to</span>
           <Autocomplete
-            disablePortal
+            multiple
             id="user"
-            options={users}
-            getOptionLabel={(option) => option.fullName || ""}
-            onChange={(event, value) => setUserId(value._id)}
+            options={usersInProject || []}
             sx={{
               "& .MuiOutlinedInput-root.Mui-focused": {
                 "& > fieldset": {
@@ -188,7 +216,17 @@ const CreateTaskModal = () => {
                 }
               }
             }}
-            renderInput={(params) => <TextField {...params} label="Search member" />}
+            getOptionLabel={(option) => option.fullName || ""}
+            onChange={(event, value) => addMember(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="Member"
+                name="member"
+                placeholder="Search member"
+              />
+            )}
           />
         </div>
 

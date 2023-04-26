@@ -20,7 +20,9 @@ const TaskDetails = () => {
   const { task } = useSelector((store) => store.taskDetail);
   const { users } = useSelector((store) => store.users);
   const { currentUser } = useSelector((store) => store.user);
-  const user = users.find((user) => user._id === task.userId);
+  const user = task.userId.flatMap(item=>{
+    return users.filter(user=> item === user._id)
+  });
   let categoryColor = '';
   let categoryBgColor = '';
   switch(task.category){
@@ -134,16 +136,14 @@ const TaskDetails = () => {
               </span>
             </div>
             <div className="lg:min-w-[7rem] md:min-w-[4rem] flex justify-center">
-              <span className="w-10 h-10 rounded-full">
-                <img src={user.image} alt="" className="rounded-full" />
-              </span>
-              <span className="w-10 h-10 rounded-full">
-                <img
-                  src="https://randomuser.me/api/portraits/thumb/women/83.jpg"
-                  alt=""
-                  className="rounded-full translate-x-[-0.75rem]"
-                />
-              </span>
+              {user.map((u,i)=>{
+                let trans = -0.75*i;
+                return (
+                  <span className="w-10 h-10 rounded-full">
+                  <img src={u?.image} alt="" className={`rounded-full translate-x-[${trans}rem]`} />
+                </span>
+                )
+              })}
             </div>
           </div>
         </div>

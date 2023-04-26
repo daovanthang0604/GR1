@@ -90,7 +90,7 @@ const Calendar = () => {
               endDate = null;
             const { _id, fullName, image, job } = user;
             tasksInProject.map((task) => {
-              if (task.userId == _id) misson.push(task);
+              if (task.userId.includes(_id)) misson.push(task);
             });
             console.log(misson);
             return (
