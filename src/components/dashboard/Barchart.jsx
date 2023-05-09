@@ -10,6 +10,7 @@ import {
     Legend,
   } from 'chart.js'
 import { Bar } from 'react-chartjs-2';
+import {format} from 'date-fns'
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -19,8 +20,24 @@ ChartJS.register(
     Tooltip,
     Legend
   )
+  const day = new Date();
+  const labels = [];
+  for (let i=3;i>0;i--){
+    const date = new Date();
+    date.setDate(day.getDate() - i);
+    const formattedDate = format(date, 'dd MMM')
+    labels.push(formattedDate)
+  }
+  labels.push('Today');
+  for (let i=1;i<=3;i++){
+    const date = new Date();
+    date.setDate(day.getDate() + i);
+    const formattedDate = format(date, 'dd MMM')
+    labels.push(formattedDate)
+  }
+  console.log(day.getDate() - 1)
 const data = {
-  labels: ['17 Apr', '18 Apr', '19 Apr', 'Today', '21 Apr', '22 Apr', '23 Apr'],
+  labels: labels,
   datasets: [
     {
       label: 'Tasks',

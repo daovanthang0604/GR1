@@ -17,6 +17,7 @@ const CreateTaskModal = () => {
   const form = useRef();
   const dispatch = useDispatch();
   const { projects } = useSelector((store) => store.project);
+  const { tasks } = useSelector((store) => store.task)
   const [title, setTitle] = useState('');
   const [category,setCategory] = useState('');
   const [projectId,setProjectId] = useState('');
@@ -25,7 +26,7 @@ const CreateTaskModal = () => {
   const [description, setDescription] = useState('');
   const [userId,setUserId] = useState([]);
   const [users,setUsers] = useState('');
-  
+
   // get the member of the project so that we only assign to the member of that projecct
   const project = projects.find(p => p._id === projectId);
   const usersInProject = project?.members.flatMap(p=>{
@@ -50,12 +51,10 @@ const CreateTaskModal = () => {
   }, []);
   const handleSubmit = async (e)=>{
     e.preventDefault();
-    console.log( title,
-      projectId,
-      startDate,
-      endDate,
-      description,
-      userId);
+    const tasksInProject = tasks.filter(task=>task.projectId === project._id);
+    const taskType = tasksInProject.filter(t => t.category === category);
+    const priority = taskType.length;
+    console.log(taskType.length)
     try {
       const res = await axios.post(
         "http://localhost:8800/api/tasks",
@@ -66,7 +65,8 @@ const CreateTaskModal = () => {
           startDate,
           endDate,
           description,
-          userId
+          userId,
+          priority
         },
         { withCredentials: true }
       );

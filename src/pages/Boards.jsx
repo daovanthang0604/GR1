@@ -150,7 +150,10 @@ const Boards = () => {
                     <div className='flex flex-col space-y-4 mt-6 '>
                       {toDo.map((item, index) => {
                         const { title, endDate, userId, _id } = item;
-                        let taskOfUser = users.find(user => user._id == userId);
+                        let taskOfUser = userId.flatMap(id => {
+                          return users.find(user=>user._id === id)
+                        });
+                        console.log(taskOfUser)
                         return (
                           <Draggable draggableId={_id} index={index} key={_id}>
                             {
@@ -169,7 +172,13 @@ const Boards = () => {
                                       <CalendarIcon className='w-6 h-6 text-gray-400' />
                                       <span className='text-gray-400'>{format(new Date(endDate), 'MM/dd/yyyy')}</span>
                                     </div>
-                                    <img src={taskOfUser?.image} title={taskOfUser?.fullName} alt="" className='w-8 h-8 rounded-full cursor-pointer' />
+                                    <div className='flex'>
+                                    {taskOfUser.map((item,index)=>{
+                                      return (
+                                        <img src={item?.image} title={item?.fullName} alt="" className={`w-8 h-8 rounded-full cursor-pointer`} />
+                                      );
+                                    })}
+                                    </div>
                                   </div>
                                 </div>
                               )
@@ -198,7 +207,9 @@ const Boards = () => {
                       {
                         inProgress.map((item, index) => {
                           const { title, endDate, userId, _id } = item;
-                          let taskOfUser = users.find(user => user._id == userId);
+                          let taskOfUser = userId.flatMap(id => {
+                            return users.find(user=>user._id === id)
+                          });
                           return (
                             <Draggable draggableId={_id} index={index} key={_id}>
                               {
@@ -214,7 +225,13 @@ const Boards = () => {
                                         <CalendarIcon className='w-6 h-6 text-gray-400' />
                                         <span className='text-gray-400'>{format(new Date(endDate), 'MM/dd/yyyy')}</span>
                                       </div>
-                                      <img src={taskOfUser?.image} title={taskOfUser?.fullName} alt="" className='w-8 h-8 rounded-full' />
+                                      <div className='flex'>
+                                    {taskOfUser.map((item,index)=>{
+                                      return (
+                                        <img src={item?.image} title={item?.fullName} alt="" className={`w-8 h-8 rounded-full cursor-pointer`} />
+                                      );
+                                    })}
+                                    </div>
                                     </div>
                                   </div>
                                 )
@@ -245,7 +262,9 @@ const Boards = () => {
                       {
                         review.map((item, index) => {
                           const { title, endDate, userId, _id } = item;
-                          let taskOfUser = users.find(user => user._id == userId);
+                          let taskOfUser = userId.flatMap(id => {
+                            return users.find(user=>user._id === id)
+                          });
                           return (
                             <Draggable draggableId={_id} index={index} key={_id}>
                               {
@@ -264,7 +283,13 @@ const Boards = () => {
                                         <CalendarIcon className='w-6 h-6 text-gray-400' />
                                         <span className='text-gray-400'>{format(new Date(endDate), 'MM/dd/yyyy')}</span>
                                       </div>
-                                      <img src={taskOfUser?.image} title={taskOfUser?.fullName} alt="" className='w-8 h-8 rounded-full' />
+                                      <div className='flex'>
+                                    {taskOfUser.map((item,index)=>{
+                                      return (
+                                        <img src={item?.image} title={item?.fullName} alt="" className={`w-8 h-8 rounded-full cursor-pointer`} />
+                                      );
+                                    })}
+                                    </div>
                                     </div>
                                   </div>
                                 )
@@ -292,7 +317,9 @@ const Boards = () => {
                     <div className='flex flex-col space-y-4 mt-6 '>
                       {done.map((item, index) => {
                         const { title, endDate, userId, _id } = item;
-                        let taskOfUser = users.find(user => user._id == userId);
+                        let taskOfUser = userId.flatMap(id => {
+                          return users.find(user=>user._id === id)
+                        });
                         return (
                           <Draggable draggableId={_id} index={index} key={_id}>
                             {
@@ -311,7 +338,13 @@ const Boards = () => {
                                       <CalendarIcon className='w-6 h-6 text-gray-400' />
                                       <span className='text-gray-400'>{format(new Date(endDate), 'MM/dd/yyyy')}</span>
                                     </div>
-                                    <img src={taskOfUser?.image} title={taskOfUser?.fullName} alt="" className='w-8 h-8 rounded-full' />
+                                    <div className='flex'>
+                                    {taskOfUser.map((item,index)=>{
+                                      return (
+                                        <img src={item?.image} title={item?.fullName} alt="" className={`w-8 h-8 rounded-full cursor-pointer`} />
+                                      );
+                                    })}
+                                    </div>
                                   </div>
                                 </div>
                               )
