@@ -10,7 +10,7 @@ const ProjectsTab = () => {
         <NavLink to="" className="tab cursor-pointer">
           Calendar
         </NavLink>
-        <NavLink to="/files" className="cursor-pointer">
+        <NavLink to="files" className="cursor-pointer">
           Files
         </NavLink>
       </ul>

@@ -14,6 +14,7 @@ import Projects from "./pages/Projects";
 import Project from "./pages/Project";
 import Boards from "./pages/Boards";
 import Dashboard from "./pages/Dashboard";
+import Files from "./pages/Files";
 function App() {
   return (
     <BrowserRouter>
@@ -27,6 +28,7 @@ function App() {
           <Route path="projects/:projectId" element={<Projects />}>
           </Route>
           <Route path="projects/:projectId/boards" element={<Boards />} />
+          <Route path="projects/:projectId/files" element={<Files />} />
           <Route path="dashboard" element={<Dashboard/>}></Route>
         </Route>
       </Routes>
