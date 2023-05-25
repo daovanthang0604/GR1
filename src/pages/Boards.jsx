@@ -49,7 +49,7 @@ const Boards = () => {
     }
 
     // Create a new array from the existing tasks
-    const newTasks = [...tasks];
+    const newTasks = [...tasksInProject];
 
     // Find the dragged task
     const draggedTaskIndex = newTasks.findIndex((task) => task._id === draggableId);
@@ -73,7 +73,7 @@ const Boards = () => {
       for (let i = Math.min(source.index, destination.index); i < Math.max(source.index, destination.index); i++) {
         removeTaskIndex.push(newTasks.findIndex((task) => task._id === filteredTasks[i]._id));
         const task = filteredTasks[i];
-        if (filteredTasks[i].priority != i) {
+        if (filteredTasks[i].priority !== i) {
           tasksToUpdate.push({
             ...task,
             priority: i,
@@ -153,7 +153,6 @@ const Boards = () => {
                         let taskOfUser = userId.flatMap(id => {
                           return users.find(user=>user._id === id)
                         });
-                        console.log(taskOfUser)
                         return (
                           <Draggable draggableId={_id} index={index} key={_id}>
                             {

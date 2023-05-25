@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import {
   fetchSuccess,
   fetchFailure,
-  updateProjects,
 } from "../features/project/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setProject, setMembers } from "../features/project/projectDetailSlice";
