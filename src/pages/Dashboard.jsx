@@ -8,7 +8,7 @@ const Dashboard = () => {
     }
     return (
         <div className='mt-4'>
-            <div className='flex flex-col gap-2 h-[750px] 2xl:h-[850px]'>
+            <div className='flex flex-col gap-2 h-[750px]'>
                 <div className='flex gap-2'>
                     <div className='w-[60%] bg-[#0A4D68] rounded-3xl p-8 relative'>
                         <Barchart />

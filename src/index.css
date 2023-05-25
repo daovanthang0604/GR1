@@ -34,4 +34,6 @@
     border-radius: 100vh;
     border: 3px solid #f6f7ed;
 }
-
+.files-grid{
+    grid-template-columns: 30% 8rem 8rem 20%;
+}

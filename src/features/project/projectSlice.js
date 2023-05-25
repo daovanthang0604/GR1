@@ -16,7 +16,7 @@ export const projectSlice = createSlice({
             state.error = true
         },
         updateProjects: (state, action) => {
-            state.tasks = action.payload;
+            state.projects = action.payload;
           }
     }
 })

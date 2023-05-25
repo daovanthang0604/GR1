@@ -11,6 +11,7 @@ import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { isModalOpen } from './../../features/modal/modalSlice';
 import AddMember from "../AddMember";
+import UploadModal from "./UploadModal";
 const SharedMainLayout = () => {
   const modalId = 'createTaskModal';
   const isOpen = useSelector((state) => isModalOpen(state.modal, modalId));
@@ -18,17 +19,20 @@ const SharedMainLayout = () => {
   const isTaskDetailsOpen = useSelector((state) => isModalOpen(state.modal, taskDetailsModalId));
   const addMemberModalId = 'addMember';
   const isAddMemberOpen = useSelector((state)=> isModalOpen(state.modal, addMemberModalId));
+  const uploadFilesModalId = 'uploadFiles'
+  const isUploadFilesOpen = useSelector((state)=> isModalOpen(state.modal, uploadFilesModalId));
   console.log(isOpen);
   return (
     <>
       {" "}
-      {(isOpen || isTaskDetailsOpen || isAddMemberOpen) && (
+      {(isOpen || isTaskDetailsOpen || isAddMemberOpen || isUploadFilesOpen) && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-overlay z-30"></div>
       )}
       <div className="flex">
         {isOpen && <CreateTaskModal />}
         {isTaskDetailsOpen && <TaskDetails/>}
         {isAddMemberOpen && <AddMember/>}
+        {isUploadFilesOpen && <UploadModal/>}
         <NavBar />
         <div className="flex flex-col  px-8 pt-8 h-screen overflow-hidden w-full">
           <TopBar />
