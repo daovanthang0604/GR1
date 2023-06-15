@@ -37,3 +37,6 @@
 .files-grid{
     grid-template-columns: 30% 8rem 8rem 20%;
 }
+.folder-grid{
+    grid-template-columns: 30% 8rem 8rem 20% 1rem;
+}

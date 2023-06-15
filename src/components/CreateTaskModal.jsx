@@ -26,7 +26,7 @@ const CreateTaskModal = () => {
   const [description, setDescription] = useState('');
   const [userId,setUserId] = useState([]);
   const [users,setUsers] = useState('');
-
+  const { currentUser } = useSelector((store) => store.user);
   // get the member of the project so that we only assign to the member of that projecct
   const project = projects.find(p => p._id === projectId);
   const usersInProject = project?.members.flatMap(p=>{
@@ -44,6 +44,13 @@ const CreateTaskModal = () => {
       dispatch(fetchSuccess(res.data))  
     } catch (error) {
       dispatch(fetchFailure())      
+    }
+  }
+  const createNotification = async(notification)=>{
+    try {
+      await axios.post(`http://localhost:8800/api/notification`, notification, { withCredentials: true });
+    } catch (error) {
+      console.error('Error updating task:', error);
     }
   }
   useEffect(() => {
@@ -87,6 +94,14 @@ const CreateTaskModal = () => {
       });
       })
       await getAllTasks();
+      //new notification
+      const newNotification = {
+        recipient: userId,
+        giver: currentUser._id,
+        type: "new task",
+      }
+      console.log(newNotification)
+      await createNotification(newNotification);
       dispatch(closeModal({ modalId: "createTaskModal" }));
       toast.success("Create task succesfully!");
     } catch (err) {

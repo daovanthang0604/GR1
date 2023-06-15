@@ -54,6 +54,13 @@ const TaskDetails = () => {
       console.error("Error updating task:", error);
     }
   };
+  const createNotification = async(notification)=>{
+    try {
+      await axios.post(`http://localhost:8800/api/notification`, notification, { withCredentials: true });
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newTask = {
@@ -67,10 +74,16 @@ const TaskDetails = () => {
         },
       ],
     };
+    const newNotification = {
+      recipient: task?.userId,
+      giver: currentUser?._id,
+      type: "comment"
+    }
     await dispatch(setTask(newTask));
     await updateTaskOnServer(newTask);
     setText('');
     await toast.success("Commented",{duration: 2000})
+    await createNotification(newNotification);
   };
   return (
     <div className="fixed top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] z-30 bg-white max-h-[85%] lg:w-1/3 w-96 rounded-md">

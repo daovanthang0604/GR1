@@ -46,7 +46,7 @@ const UploadModal = () => {
         console.log("Error uploading files:", error);
       });
   };
-  console.log(uploadedFiles)
+  console.log(uploadedFiles[0]?.type)
   return (
     <div className="fixed top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] z-30 bg-white lg:w-2/5 w-96 rounded-xl">
       <div className="flex flex-col pt-4 pb-8 px-8 space-y-2">
