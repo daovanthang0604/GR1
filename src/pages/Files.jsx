@@ -7,6 +7,7 @@ import {
   fetchFilesSuccess,
   fetchFilesFailure,
 } from "../features/file/filesSlice";
+import { setFileCategory, setFiles } from "../features/folder/folderSlice";
 import { format } from "date-fns";
 import axios from "axios";
 import {
@@ -37,7 +38,12 @@ const Files = () => {
   useEffect(() => {
     getAllFiles();
   }, [newUpdate]);
+  // get files in project and category folder
   const filesInProject = files.filter((file) => file.projectId === project?._id);
+  const documentFiles = filesInProject.filter(f=> f.category === 'Documents');
+  const pitureFiles = filesInProject.filter(f=> f.category === 'Pictures');
+  const videoFiles = filesInProject.filter(f=> f.category === 'Videos');
+  const otherFiles = filesInProject.filter(f=> f.category === 'Others');
 //   filesInProject.sort((a, b) => {
 //     const dateA = new Date(a.uploadTime);
 //     const dateB = new Date(b.uploadTime);
@@ -88,26 +94,50 @@ const Files = () => {
         <div className="flex items-center justify-around mt-4">
           <div className="flex gap-2 p-4 bg-yellow-100 rounded-lg w-48 items-center">
             <DocumentTextIcon className="w-12 h-12 rounded-lg bg-sun p-2 text-white" />
-            <div className="flex flex-col">
-              <span className="font-semibold text-lg">Document</span>
+            <div className="flex flex-col cursor-pointer" onClick={()=>{dispatch(
+                                    openModal({ modalId: "folder" })
+                                    
+                                  )
+                                  dispatch(setFiles(documentFiles));
+                                  dispatch(setFileCategory('Documents'));
+                                }}>
+              <span className="font-semibold text-lg">Documents</span>
               <span className="text-gray-400 font-light">102 Files</span>
             </div>
           </div>
-          <div className="flex gap-2 p-4 bg-orange-100 rounded-lg w-48 items-center">
+          <div className="flex gap-2 p-4 bg-orange-100 rounded-lg w-48 items-center cursor-pointer" onClick={()=>{dispatch(
+                                    openModal({ modalId: "folder" })
+                                    
+                                  )
+                                  dispatch(setFiles(pitureFiles));
+                                  dispatch(setFileCategory('Pictures'));
+                                }}>
             <PhotographIcon className="w-12 h-12 rounded-lg bg-accent p-2 text-white" />
             <div className="flex flex-col">
               <span className="font-semibold text-lg">Pictures</span>
               <span className="text-gray-400 font-light">22 Files</span>
             </div>
           </div>
-          <div className="flex gap-2 p-4 bg-green-100 rounded-lg w-48 items-center">
+          <div className="flex gap-2 p-4 bg-green-100 rounded-lg w-48 items-center cursor-pointer" onClick={()=>{dispatch(
+                                    openModal({ modalId: "folder" })
+                                    
+                                  )
+                                  dispatch(setFiles(videoFiles));
+                                  dispatch(setFileCategory('Videos'));
+                                }}>
             <VideoCameraIcon className="w-12 h-12 rounded-lg bg-done p-2 text-white" />
             <div className="flex flex-col">
               <span className="font-semibold text-lg">Videos</span>
               <span className="text-gray-400 font-light">12 Files</span>
             </div>
           </div>
-          <div className="flex gap-2 p-4 bg-sky-100 rounded-lg w-48 items-center">
+          <div className="flex gap-2 p-4 bg-sky-100 rounded-lg w-48 items-center cursor-pointer" onClick={()=>{dispatch(
+                                    openModal({ modalId: "folder" })
+                                    
+                                  )
+                                  dispatch(setFiles(otherFiles));
+                                  dispatch(setFileCategory('Others'));
+                                }}>
             <ArchiveIcon className="w-12 h-12 rounded-lg bg-pool p-2 text-white" />
             <div className="flex flex-col">
               <span className="font-semibold text-lg">Others</span>
@@ -115,7 +145,20 @@ const Files = () => {
             </div>
           </div>
         </div>
-        <div className="font-bold text-xl mt-8">Recent files</div>
+        <div className="mt-8 flex justify-between">
+          <div className="font-bold text-xl">
+            Recent files
+          </div>
+          <div className="text-ocean hover:border-b-ocean hover:border-b cursor-pointer font-light hover:font-normal" onClick={()=>{dispatch(
+                                    openModal({ modalId: "folder" })
+                                    
+                                  )
+                                  dispatch(setFiles(filesInProject));
+                                  dispatch(setFileCategory('Documents'));
+                                }}>
+            View all files
+          </div>
+        </div>
         <div className="grid files-grid mt-2 content-center items-center justify-between">
           <div className="flex items-center gap-2 font-light">
             Name
@@ -140,9 +183,8 @@ const Files = () => {
             return (
               <>
                 <div className="flex items-center space-x-1">
-                {file.type.includes('pdf') && (<DocumentTextIcon className="w-4 h-4"/>)}
-                {file.type.includes('image') && <PhotographIcon className="w-4 h-4"/>}
-                {file.type.includes('sheet') && (<DocumentTextIcon className="w-4 h-4"/>)}
+                {(file.category === 'Documents') && (<DocumentTextIcon className="w-4 h-4"/>)}
+                {(file.category === 'Pictures') && <PhotographIcon className="w-4 h-4"/>}
                   <a href={file.link} target="_blank" rel="noopener noreferrer">
                      {file.fileName}
                   </a>

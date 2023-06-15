@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   BellIcon,
   ChatAlt2Icon,
@@ -6,11 +6,19 @@ import {
 } from "@heroicons/react/outline";
 import { useSelector } from "react-redux";
 import { useLocation } from 'react-router-dom';
+import Notification from "./Notification";
 const TopBar = () => {
+  const [isHover, setIsHover] = useState(false);
   const { currentUser } = useSelector((store) => store.user);
   const location = useLocation();
   const currentRoute = location.pathname;
   let currentTitle = '';
+  const handleMouseHover = ()=>{
+    setIsHover(true);
+  }
+  const handleMouseout = ()=>{
+    setIsHover(false);
+  }
   console.log(currentRoute.split('/'))
   if(currentRoute.split('/').includes('dashboard')) currentTitle = 'Dashboard';
   else if (currentRoute.split('/').includes('projects ')) currentTitle = 'Projects';
@@ -23,7 +31,10 @@ const TopBar = () => {
         <div className="flex justify-around space-x-8">
           <div className="flex items-center space-x-8">
             <ChatAlt2Icon className="w-6 h-6 cursor-pointer" />
-            <BellIcon className="w-6 h-6 cursor-pointer" />
+            <div className="relative"  onMouseOver={(handleMouseHover)} onMouseOut={handleMouseout}>
+            <BellIcon className="w-6 h-6 cursor-pointer"/>
+            {isHover && <Notification/>}
+            </div>
           </div>
           <div className="relative before:absolute before:bottom-2/4 before:right-0 before:h-6 before:border-r before:border-slate-300 before:translate-y-2/4"></div>
           <div className="flex justify-around space-x-4 items-center">

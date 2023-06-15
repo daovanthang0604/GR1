@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import { isModalOpen } from './../../features/modal/modalSlice';
 import AddMember from "../AddMember";
 import UploadModal from "./UploadModal";
+import Folder from "../Folder";
 const SharedMainLayout = () => {
   const modalId = 'createTaskModal';
   const isOpen = useSelector((state) => isModalOpen(state.modal, modalId));
@@ -21,11 +22,13 @@ const SharedMainLayout = () => {
   const isAddMemberOpen = useSelector((state)=> isModalOpen(state.modal, addMemberModalId));
   const uploadFilesModalId = 'uploadFiles'
   const isUploadFilesOpen = useSelector((state)=> isModalOpen(state.modal, uploadFilesModalId));
+  const folderId = 'folder'
+  const isFolderOpen = useSelector((state)=> isModalOpen(state.modal, folderId));
   console.log(isOpen);
   return (
     <>
       {" "}
-      {(isOpen || isTaskDetailsOpen || isAddMemberOpen || isUploadFilesOpen) && (
+      {(isOpen || isTaskDetailsOpen || isAddMemberOpen || isUploadFilesOpen || isFolderOpen) && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-overlay z-30"></div>
       )}
       <div className="flex">
@@ -33,6 +36,7 @@ const SharedMainLayout = () => {
         {isTaskDetailsOpen && <TaskDetails/>}
         {isAddMemberOpen && <AddMember/>}
         {isUploadFilesOpen && <UploadModal/>}
+        {isFolderOpen && <Folder/>}
         <NavBar />
         <div className="flex flex-col  px-8 pt-8 h-screen overflow-hidden w-full">
           <TopBar />
