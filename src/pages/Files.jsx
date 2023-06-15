@@ -134,7 +134,7 @@ const Files = () => {
           </div>
           <hr className="col-span-4 mt-4 text-neutral-400" />
         </div>
-        <div className="container overflow-y-auto max-h-[350px] scrollbar pb-4">
+        <div className="container overflow-y-auto max-h-[320px] scrollbar pb-4">
         <div className="grid files-grid content-center items-center justify-between gap-y-4">
           {filesInProject.map((file) => {
             return (
