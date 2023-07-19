@@ -34,9 +34,10 @@ const Project = () => {
   };
   useEffect(() => {
     getAllProject();
-    getAllProject();
+    getAllUsers();
   }, []);
   console.log(projects);
+  console.log(users)
   return (
     <div className="mt-8">
       <div className="flex justify-between items-center">
@@ -80,8 +81,10 @@ const Project = () => {
                   </h3>
                 </div>
                 {/* Number of Members */}
+                {console.log(showedMember)}
                 <div className="flex items-center justify-center translate-x-[1rem]">
                   {showedMember.map((mem, index) => {
+                    console.log(mem)
                     return (
                       <img
                         src={mem.image}
