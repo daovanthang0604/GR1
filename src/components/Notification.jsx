@@ -49,8 +49,6 @@ const Notification = () => {
                     console.log(giver)
                     return (
                       <div className='flex items-center gap-2 px-2 py-4 rounded-md hover:bg-gray-200' key={noti?._id}>
-                      <img src={giver.image} alt="" className='w-10 h-10 rounded-full'/>
-                      <div className='flex items-center gap-2 px-2 py-4 rounded-md hover:bg-gray-200'>
                       <img src={giver?.image} alt="" className='w-10 h-10 rounded-full'/>
                       <div className='flex flex-col text-sm w-full'>
                         <div>

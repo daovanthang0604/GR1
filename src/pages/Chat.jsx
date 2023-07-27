@@ -10,6 +10,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { format } from "timeago.js";
+import { create } from "@mui/material/styles/createTransitions";
 const Chat = () => {
   const [isUserSeletected, setIsUserSelected] = useState(false);
   const [userSelected, setUserSelected] = useState({});
@@ -51,7 +52,7 @@ const Chat = () => {
   };
   const createConversation = async (senderId, receiverId) => {
     try {
-      await axios
+      const response = await axios
         .post(
           "http://localhost:8800/api/conversations/",
           { senderId, receiverId },
@@ -59,7 +60,7 @@ const Chat = () => {
             withCredentials: true,
           }
         )
-        .then((res) => setCreateConversationId(res?.data._id));
+          return response.data?._id
     } catch (error) {
       console.log("Error creating conversation", error);
     }
@@ -72,6 +73,7 @@ const Chat = () => {
     e.preventDefault();
     let isExist = false;
     let backupConversationId;
+    console.log(receiver)
     // check if conversation between 2 people exist?
     for (const conv of conversations) {
       if (
@@ -81,21 +83,20 @@ const Chat = () => {
         isExist = true;
         if (isExist === true) {
           backupConversationId = conv._id;
-          setCreateConversationId(conv._id);
         }
         break;
       }
     }
-    console.log(createConversationId);
     console.log(isExist);
     // if not exist then create a new one
-    if (!isExist) createConversation(currentUser._id, receiver);
+    if (!isExist) { const newConversationId = await createConversation(currentUser._id, receiver);
+    backupConversationId = newConversationId;
+    getConversations();
+    };
     const message = {
       sender: currentUser._id,
       text: newMessage,
-      conversationId: createConversationId
-        ? createConversationId
-        : backupConversationId,
+      conversationId: backupConversationId,
     };
     try {
       const res = await axios.post(
@@ -114,9 +115,7 @@ const Chat = () => {
     }
     setNewMessage("");
     setIsUserSelected(true);
-    createConversationId
-      ? getMessages(createConversationId)
-      : getMessages(backupConversationId);
+    getMessages(backupConversationId);
   };
 
   const handleChat = async (chatId, friend) => {
