@@ -11,7 +11,12 @@ import {
 import { Link,useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
+import { ArrowLeftIcon } from "@heroicons/react/outline";
 const Register = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const [fullName,setFullName] = useState("");
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
@@ -24,10 +29,9 @@ const Register = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginStart);
     try{
       const res = await axios.post(
-        "http://localhost:8800/api/auth/register",
+        `${serverURL}/api/auth/register`,
         {
           fullName,
           email,
@@ -36,16 +40,17 @@ const Register = () => {
         },
         { withCredentials: true }
       );
-      dispatch(loginSuccess(res.data));
       navigate("/main");
       toast.success("Registered succesfully!");
     }catch(err){
-      dispatch(loginFailure());
+      console.log("Register failed! ",err);
+      toast.error("You are not authorized!");
     }
   };
   return (
     <div className="flex flex-col  space-y-4">
-      <h3 className="text-3xl font-semibold">Register</h3>
+      <Link to="/main"><ArrowLeftIcon className="w-6 h-6 hover:text-ocean cursor-pointer"/></Link>
+      <h3 className="text-3xl font-semibold">Register (Only for Admin)</h3>
       <p className="font-medium">Fill out the information below</p>
       <form>
         <div className="mb-8 relative">
@@ -136,12 +141,6 @@ const Register = () => {
           Register
         </button>
       </form>
-      <span className="text-lg">
-        Already have an account?{" "}
-        <Link to="/" className="text-ocean">
-          Sign in
-        </Link>{" "}
-      </span>
     </div>
   );
 };

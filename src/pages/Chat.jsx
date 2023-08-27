@@ -11,23 +11,51 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { format } from "timeago.js";
 import { create } from "@mui/material/styles/createTransitions";
+import { io } from "socket.io-client";
 const Chat = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const [isUserSeletected, setIsUserSelected] = useState(false);
   const [userSelected, setUserSelected] = useState({});
   const [receiver, setReceiver] = useState("");
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [conversations, setConversations] = useState([]);
+  const [arrivalMessage,setArrivalMessage] = useState("");
   const [createConversationId, setCreateConversationId] = useState("");
   const { users } = useSelector((store) => store.users);
   const { currentUser } = useSelector((store) => store.user);
   const scrollRef = useRef();
   const receiverOptions = users.filter((u) => u.email !== currentUser.email);
-  console.log(receiverOptions);
+  //implement socket
+  const socket = useRef();
+  useEffect(() => {
+    socket.current = io(`${serverURL}`)
+    socket.current.on("getMessage", data=>{
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createAt: Date.now(),
+      })
+    })
+  }, []);
+  useEffect(()=>{
+    arrivalMessage && (receiver === arrivalMessage?.sender) &&
+    setMessages(prev=>[...prev, arrivalMessage])
+  },[arrivalMessage,receiver])
+  useEffect(() => {
+    socket.current.emit("addUser",currentUser._id)
+    socket.current.on("getUsers",users=>{
+      console.log(users)
+    })
+  }, [socket.current]);
+
   const getConversations = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8800/api/conversations/" + currentUser._id,
+        `${serverURL}/api/conversations/` + currentUser._id,
         {
           withCredentials: true,
         }
@@ -40,7 +68,7 @@ const Chat = () => {
   const getMessages = async (chatId) => {
     try {
       const res = await axios.get(
-        "http://localhost:8800/api/messages/" + chatId,
+        `${serverURL}/api/messages/` + chatId,
         {
           withCredentials: true,
         }
@@ -54,7 +82,7 @@ const Chat = () => {
     try {
       const response = await axios
         .post(
-          "http://localhost:8800/api/conversations/",
+          `${serverURL}/api/conversations/`,
           { senderId, receiverId },
           {
             withCredentials: true,
@@ -98,9 +126,14 @@ const Chat = () => {
       text: newMessage,
       conversationId: backupConversationId,
     };
+    socket.current.emit("sendMessage",{
+      senderId: currentUser._id,
+      receiverId: receiver,
+      text: newMessage,
+    })
     try {
       const res = await axios.post(
-        "http://localhost:8800/api/messages/",
+        `${serverURL}/api/messages/`,
         message,
         {
           withCredentials: true,
@@ -198,7 +231,7 @@ const Chat = () => {
                     getOptionLabel={(option) => option.email}
                     onChange={(e, v) => {
                       console.log(v);
-                      setReceiver(v._id);
+                      setReceiver(v?._id);
                     }}
                     renderInput={(params) => (
                       <TextField

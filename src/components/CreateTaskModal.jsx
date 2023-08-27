@@ -13,6 +13,10 @@ import axios from "axios";
 import {toast} from "react-hot-toast"
 import emailjs from '@emailjs/browser';
 const CreateTaskModal = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const modalId = 'createTaskModal';
   const form = useRef();
   const dispatch = useDispatch();
@@ -35,12 +39,12 @@ const CreateTaskModal = () => {
   console.log(usersInProject)
   //render all users
   const getAllUsers = async()=>{
-    const res = await axios.get("http://localhost:8800/api/users/", { withCredentials: true });
+    const res = await axios.get(`${serverURL}/api/users/`, { withCredentials: true });
     await setUsers(res.data);
   }
   const getAllTasks = async()=>{
     try {
-      const res = await axios.get("http://localhost:8800/api/tasks/", { withCredentials: true });
+      const res = await axios.get(`${serverURL}/api/tasks/`, { withCredentials: true });
       dispatch(fetchSuccess(res.data))  
     } catch (error) {
       dispatch(fetchFailure())      
@@ -48,7 +52,7 @@ const CreateTaskModal = () => {
   }
   const createNotification = async(notification)=>{
     try {
-      await axios.post(`http://localhost:8800/api/notification`, notification, { withCredentials: true });
+      await axios.post(`${serverURL}/api/notification`, notification, { withCredentials: true });
     } catch (error) {
       console.error('Error updating task:', error);
     }
@@ -64,7 +68,7 @@ const CreateTaskModal = () => {
     console.log(taskType.length)
     try {
       const res = await axios.post(
-        "http://localhost:8800/api/tasks",
+        `${serverURL}/api/tasks`,
         {
           title,
           category,
@@ -77,7 +81,7 @@ const CreateTaskModal = () => {
         },
         { withCredentials: true }
       );
-      console.log(form.current)
+      // console.log(form.current)
       userId.forEach(uId=>{
         const member = users.find(user=> user._id === uId);
         const templateParams = {

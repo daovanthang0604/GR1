@@ -15,6 +15,10 @@ import { format } from "date-fns";
 import { setTask } from "../features/task/taskDetailSlice";
 import { toast } from 'react-hot-toast';
 const TaskDetails = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const [text, setText] = useState('');
   const dispatch = useDispatch();
   const { task } = useSelector((store) => store.taskDetail);
@@ -47,7 +51,7 @@ const TaskDetails = () => {
   }
   const updateTaskOnServer = async (task) => {
     try {
-      await axios.patch(`http://localhost:8800/api/tasks/${task._id}`, task, {
+      await axios.patch(`${serverURL}/api/tasks/${task._id}`, task, {
         withCredentials: true,
       });
     } catch (error) {
@@ -56,7 +60,7 @@ const TaskDetails = () => {
   };
   const createNotification = async(notification)=>{
     try {
-      await axios.post(`http://localhost:8800/api/notification`, notification, { withCredentials: true });
+      await axios.post(`${serverURL}/api/notification`, notification, { withCredentials: true });
     } catch (error) {
       console.error('Error updating task:', error);
     }

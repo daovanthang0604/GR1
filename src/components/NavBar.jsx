@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DatabaseIcon,
   ViewGridIcon,
@@ -22,12 +22,33 @@ import { NavLink, useNavigate } from "react-router-dom";
 const NavBar = () => {
   const { currentUser } = useSelector((store) => store.user);
   const [toggle, setToggle] = useState(false);
+  const [openLogout,setOpenLogout] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
   };
+   // Function to check if the screen is in mobile view
+   const isMobileView = () => window.matchMedia("(max-width: 768px)").matches;
+
+   // Set the initial toggle value based on the screen size
+   useEffect(() => {
+     setToggle(isMobileView());
+   }, []);
+ 
+   // Listen for window resize and update toggle accordingly
+   useEffect(() => {
+     const resizeListener = () => {
+       setToggle(isMobileView());
+     };
+ 
+     window.addEventListener("resize", resizeListener);
+ 
+     return () => {
+       window.removeEventListener("resize", resizeListener);
+     };
+   }, []);
   return (
     <nav
       className={`p-8 w-[300px] bg-navi h-screen border-r-2 border-slate-100 relative transition-all ease-out duration-200 ${
@@ -54,7 +75,7 @@ const NavBar = () => {
       {/* Nav Content */}
       <div className="pt-16 flex flex-col space-y-8 leading-6">
         <div className="flex items-center align-middle space-x-4">
-          <ViewGridIcon className="w-8 h-8 text-slate-400" />
+          <NavLink to="/main/dashboard"><ViewGridIcon className="w-8 h-8 text-slate-400" /></NavLink>
           {!toggle && (
             <NavLink
               to="/main/dashboard"
@@ -65,10 +86,10 @@ const NavBar = () => {
           )}
         </div>
         <div className="flex items-center align-middle space-x-4">
-          <ChartBarIcon className="w-8 h-8 text-slate-400" />
+          <NavLink to="/main/analytics"><ChartBarIcon className="w-8 h-8 text-slate-400"/></NavLink> 
           {!toggle && (
             <NavLink
-              to="/main/analytics"
+              to="/main"
               className="text-xl font-medium tracking-tight cursor-pointer"
             >
               Analytics
@@ -76,7 +97,7 @@ const NavBar = () => {
           )}
         </div>
         <div className="flex items-center align-middle space-x-4">
-          <FolderIcon className="w-8 h-8 text-slate-400" />
+           <NavLink to="/main"><FolderIcon className="w-8 h-8 text-slate-400" /></NavLink> 
           {!toggle && (
             <NavLink
               to="/main"
@@ -87,10 +108,10 @@ const NavBar = () => {
           )}
         </div>
         <div className="flex items-center align-middle space-x-4">
-          <CogIcon className="w-8 h-8 text-slate-400" />
+          <NavLink to="/main/settings"><CogIcon className="w-8 h-8 text-slate-400" /></NavLink> 
           {!toggle && (
             <NavLink
-              to="/main/settings"
+              to={`/register`}
               className="text-xl font-medium tracking-tight cursor-pointer"
             >
               Settings
@@ -120,7 +141,7 @@ const NavBar = () => {
       <div className="absolute bottom-4">
         {!toggle ? (
           <div
-            className={`flex justify-around space-x-4 items-center ${
+            className={`flex justify-around space-x-4 items-center relative ${
               toggle && "space-x-1"
             }`}
           >
@@ -133,7 +154,13 @@ const NavBar = () => {
               <h5>{currentUser?.fullName}</h5>
               <span>{currentUser?.email}</span>
             </div>
-            <ChevronUpIcon className="w-4 h-4" />
+            <ChevronUpIcon className="w-4 h-4 cursor-pointer" onClick={()=>setOpenLogout(!openLogout)}/>
+           {openLogout && <div className="absolute right-0 top-[-4rem] bg-white w-full cursor-pointer" onClick={handleLogout}>
+              <div className="flex p-4 justify-center gap-2">
+              <LogoutIcon className="w-6 h-6"/>
+              <span>Log out</span>
+              </div>
+            </div>} 
           </div>
         ) : (
           <div className="flex justify-center items-center w-8 h-8 text-slate-400 cursor-pointer">

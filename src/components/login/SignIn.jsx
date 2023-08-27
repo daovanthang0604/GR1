@@ -9,6 +9,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from 'react-hot-toast';
 const SignIn = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -18,7 +22,7 @@ const SignIn = () => {
     dispatch(loginStart);
     try {
       const res = await axios.post(
-        "http://localhost:8800/api/auth/login",
+        `${serverURL}/api/auth/login`,
         {
           email,
           password,
@@ -37,6 +41,7 @@ const SignIn = () => {
   return (
     <div className="flex flex-col space-y-8">
       <h3 className="text-3xl font-semibold">Sign in</h3>
+      <i>Demo account: thang@gmail.com <br />  Password: 556677</i>
       <p className="font-medium">Sign in to your account below</p>
       <form className="">
         <div className="mb-8 relative">
@@ -82,12 +87,6 @@ const SignIn = () => {
           Sign in
         </button>
       </form>
-      <span className="text-lg">
-        Dont have an account?{" "}
-        <Link to="/register" className="text-ocean">
-          Register
-        </Link>{" "}
-      </span>
     </div>
   );
 };

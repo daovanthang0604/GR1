@@ -9,6 +9,10 @@ import { updateFiles } from "../../features/file/filesSlice";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 const UploadModal = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const dispatch = useDispatch();
   const {currentUser} = useSelector(store=> store.user)
   const {project} = useSelector((store)=> store.projectDetail)
@@ -30,7 +34,7 @@ const UploadModal = () => {
     formData.append('userId', currentUser._id)
     formData.append('projectId',project._id)
     axios
-      .post("http://localhost:8800/api/upload", formData,  { withCredentials: true })
+      .post(`${serverURL}/api/upload`, formData,  { withCredentials: true })
       .then((response) => {
         // File(s) uploaded successfully
         console.log("File(s) uploaded successfully.");

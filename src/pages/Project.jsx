@@ -12,19 +12,23 @@ import { openModal } from "../features/modal/modalSlice";
 import axios from "axios";
 import { Link } from "react-router-dom";
 const Project = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const dispatch = useDispatch();
   const { projects } = useSelector((store) => store.project);
   const { users } = useSelector((store) => store.users);
   //render all users
   const getAllUsers = async () => {
-    const res = await axios.get("http://localhost:8800/api/users/", {
+    const res = await axios.get(`${serverURL}/api/users/`, {
       withCredentials: true,
     });
     await dispatch(setAllUsers(res.data));
   };
   const getAllProject = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/api/projects/", {
+      const res = await axios.get(`${serverURL}/api/projects/`, {
         withCredentials: true,
       });
       dispatch(fetchSuccess(res.data));
@@ -43,12 +47,14 @@ const Project = () => {
       <div className="flex justify-between items-center">
         <span className="font-bold text-2xl">Project List</span>
         <div>
-          <button className="bg-ocean text-white p-2 ">Create Project</button>
+          <button className="bg-ocean text-white p-2 " onClick={()=>  dispatch(
+                                    openModal({ modalId: "project" })
+                                  )}>Create Project</button>
         </div>
       </div>
       <div className="grid lg:grid-cols-3 grid-cols-2 lg:gap-5 gap-3 mt-8 overflow-y-auto max-h-[80vh] scrollbar">
         {projects.map((project) => {
-          const membersInProject = project.members.flatMap(
+          const membersInProject = project?.members.flatMap(
             (memberId) => users.find((user) => user._id === memberId) || []
           );
           const showedMember = membersInProject.slice(0, 3);
@@ -83,8 +89,11 @@ const Project = () => {
                 {/* Number of Members */}
                 {console.log(showedMember)}
                 <div className="flex items-center justify-center translate-x-[1rem]">
+                  {membersInProject.length === 0 && <div className="w-8 h-8 text-xs bg-tertiary translate-x-[-1rem] rounded-full text-white flex items-center justify-center border-white border">
+                    0
+                    </div>}
                   {showedMember.map((mem, index) => {
-                    console.log(mem)
+                    // console.log(mem)
                     return (
                       <img
                         src={mem.image}
@@ -120,12 +129,13 @@ const Project = () => {
                   className="text-gray-400 cursor-pointer"
                   onClick={() => {
                     dispatch(openModal({ modalId: "addMember" }));
+                    dispatch(setProject(project));
                     dispatch(setMembers(membersInProject));
                   }}
                 >
                   Add people
                 </span>
-                <Link to={`/main/projects/${project._id}`}>
+                <Link to={`/main/projects/${project._id}/`}>
                   <span
                     className="text-gray-400 cursor-pointer"
                     onClick={() => {

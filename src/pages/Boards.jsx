@@ -9,6 +9,10 @@ import { fetchSuccess, fetchFailure, updateTasks } from "../features/task/taskSl
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 const Boards = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const dispatch = useDispatch();
   const { tasks } = useSelector((store) => store.task)
   const { users } = useSelector((store) => store.users);
@@ -26,7 +30,7 @@ const Boards = () => {
   //update task when user drop
   const updateTaskOnServer = async (task) => {
     try {
-      await axios.patch(`http://localhost:8800/api/tasks/${task._id}`, task, { withCredentials: true });
+      await axios.patch(`${serverURL}/api/tasks/${task._id}`, task, { withCredentials: true });
     } catch (error) {
       console.error('Error updating task:', error);
     }

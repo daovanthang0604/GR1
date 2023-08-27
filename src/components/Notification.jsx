@@ -3,13 +3,22 @@ import { XIcon } from '@heroicons/react/outline'
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import axios from 'axios'
+import { useDispatch } from 'react-redux';
+import { setTask } from '../features/task/taskDetailSlice';
+import { openModal } from '../features/modal/modalSlice';
 const Notification = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
+  const dispatch = useDispatch();
   const [myNotification, setMyNotification] = useState([]);
   const { users } = useSelector((store) => store.users);
   const { currentUser } = useSelector((store) => store.user);
+  const { tasks } = useSelector((store) => store.task)
   const getNotification = async()=>{
     try {
-      const res = await axios.get(`http://localhost:8800/api/notification/${currentUser._id}`, {
+      const res = await axios.get(`${serverURL}/api/notification/${currentUser._id}`, {
         withCredentials: true,
       });
       res.data.sort((a, b) =>  b.createAt - a.createAt);
@@ -46,9 +55,11 @@ const Notification = () => {
                 <div className='mt-4 flex flex-col gap-y-4 w-full'>
                   {myNotification.map(noti=>{
                     const giver= users.find(u=>u._id === noti.giver);
-                    console.log(giver)
+                    // const myTask = tasks.find(task=> task?._id === noti?.taskId)
+                    // console.log(myTask)
+                    // console.log(giver)
                     return (
-                      <div className='flex items-center gap-2 px-2 py-4 rounded-md hover:bg-gray-200' key={noti?._id}>
+                      <div className='flex items-center gap-2 px-2 py-4 rounded-md hover:bg-gray-200 cursor-pointer' key={noti?._id}>
                       <img src={giver?.image} alt="" className='w-10 h-10 rounded-full'/>
                       <div className='flex flex-col text-sm w-full'>
                         <div>
@@ -67,41 +78,6 @@ const Notification = () => {
                     </div>
                     );
                   })}
-                  
-                  <div className='flex items-center gap-2 p-2'>
-                    <img src="https://randomuser.me/api/portraits/thumb/men/75.jpg" alt="" className='w-10 h-10 rounded-full'/>
-                    <div className='flex flex-col text-sm w-full'>
-                      <span> <span className='font-medium'>Frankie Sullvan</span>  mentioned you</span>
-                      <div className='flex justify-between text-xs font-light'>
-                      <span>Friday 10:04 am</span>
-                      <span>Mar 20, 2023</span>
-                      </div>
-                     
-                    </div>
-                  </div>
-                  <div className='flex items-center gap-2 p-2'>
-                    <img src="https://randomuser.me/api/portraits/thumb/men/75.jpg" alt="" className='w-10 h-10 rounded-full'/>
-                    <div className='flex flex-col text-sm w-full'>
-                      <span> <span className='font-medium'>Frankie Sullvan</span>  assigned a new task to you</span>
-                      <div className='flex justify-between text-xs font-light'>
-                      <span>Friday 10:04 am</span>
-                      <span>Mar 20, 2023</span>
-                      </div>
-                     
-                    </div>
-                  </div>
-                  <div className='flex items-center gap-2 p-2'>
-                    <img src="https://randomuser.me/api/portraits/thumb/men/75.jpg" alt="" className='w-10 h-10 rounded-full'/>
-                    <div className='flex flex-col text-sm w-full'>
-                      <span> <span className='font-medium'>Frankie Sullvan</span>  assigned a new task to you</span>
-                      <div className='flex justify-between text-xs font-light'>
-                      <span>Friday 10:04 am</span>
-                      <span>Mar 20, 2023</span>
-                      </div>
-                     
-                    </div>
-                  </div>
-                  
                   {/* See All */}
                   <div className='flex justify-center mb-2 mt-2'>
                     <button className='font-light text-ocean'>View all</button>

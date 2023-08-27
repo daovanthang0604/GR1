@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../features/modal/modalSlice";
 import { format } from "date-fns";
 const Folder = () => {
+    const { users } = useSelector((store) => store.users);
+    const { currentUser } = useSelector((store) => store.user);
     const {file,filecategory} = useSelector(store=> store.folder)
     console.log(file)
     const dispatch = useDispatch();
@@ -52,6 +54,7 @@ const Folder = () => {
         <div className="container overflow-y-auto max-h-[350px] scrollbar pb-4">
         <div className="grid folder-grid content-center items-center justify-between gap-y-4">
           {file.map((f) => {
+            const uploader = users.find(user=> user?._id === f?.uploader)
             return (
               <>
                 <div className="flex items-center space-x-1">
@@ -62,7 +65,7 @@ const Folder = () => {
                   </a>
                 </div>
                 <div>{Math.round((f.size / 1000000) * 100) / 100} MB</div>
-                <div>Me</div>
+                {currentUser?._id === uploader?._id ? <div>Me</div> : <div>{uploader?.fullName}</div>} 
                 <div>
                   {format(new Date(f.uploadTime), "MM/dd/yyyy - HH:mm")}
                 </div>

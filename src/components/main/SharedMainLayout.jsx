@@ -13,6 +13,7 @@ import { isModalOpen } from './../../features/modal/modalSlice';
 import AddMember from "../AddMember";
 import UploadModal from "./UploadModal";
 import Folder from "../Folder";
+import CreateProjectModal from "../CreateProjectModal";
 const SharedMainLayout = () => {
   const modalId = 'createTaskModal';
   const isOpen = useSelector((state) => isModalOpen(state.modal, modalId));
@@ -24,11 +25,13 @@ const SharedMainLayout = () => {
   const isUploadFilesOpen = useSelector((state)=> isModalOpen(state.modal, uploadFilesModalId));
   const folderId = 'folder'
   const isFolderOpen = useSelector((state)=> isModalOpen(state.modal, folderId));
+  const projectId = 'project';
+  const isProjectOpen = useSelector((state)=> isModalOpen(state.modal, projectId));
   console.log(isOpen);
   return (
     <>
       {" "}
-      {(isOpen || isTaskDetailsOpen || isAddMemberOpen || isUploadFilesOpen || isFolderOpen) && (
+      {(isOpen || isTaskDetailsOpen || isAddMemberOpen || isUploadFilesOpen || isFolderOpen || isProjectOpen) && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-overlay z-30"></div>
       )}
       <div className="flex">
@@ -37,6 +40,7 @@ const SharedMainLayout = () => {
         {isAddMemberOpen && <AddMember/>}
         {isUploadFilesOpen && <UploadModal/>}
         {isFolderOpen && <Folder/>}
+        {isProjectOpen && <CreateProjectModal/>}
         <NavBar />
         <div className="flex flex-col  px-8 pt-8 h-screen overflow-hidden w-full">
           <TopBar />

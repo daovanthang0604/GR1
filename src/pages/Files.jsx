@@ -20,14 +20,20 @@ import {
   SwitchVerticalIcon
 } from "@heroicons/react/outline";
 const Files = () => {
+  const serverURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_LOCAL_SERVER_URL
+    : process.env.REACT_APP_PROD_SERVER_URL;
   const { project } = useSelector((store) => store.projectDetail);
+  const { users } = useSelector((store) => store.users);
+  const { currentUser } = useSelector((store) => store.user);
   const { files, newUpdate } = useSelector((store) => store.files);
   const dispatch = useDispatch();
   const [nameIncrease, setNameIncrease] = useState(false);
   const [modifiedTime, setModifiedTime] = useState(true);
   const getAllFiles = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/api/upload/", {
+      const res = await axios.get(`${serverURL}/api/upload/`, {
         withCredentials: true,
       });
       dispatch(fetchFilesSuccess(res.data));
@@ -102,7 +108,7 @@ const Files = () => {
                                   dispatch(setFileCategory('Documents'));
                                 }}>
               <span className="font-semibold text-lg">Documents</span>
-              <span className="text-gray-400 font-light">102 Files</span>
+              <span className="text-gray-400 font-light">{documentFiles.length} Files</span>
             </div>
           </div>
           <div className="flex gap-2 p-4 bg-orange-100 rounded-lg w-48 items-center cursor-pointer" onClick={()=>{dispatch(
@@ -115,7 +121,7 @@ const Files = () => {
             <PhotographIcon className="w-12 h-12 rounded-lg bg-accent p-2 text-white" />
             <div className="flex flex-col">
               <span className="font-semibold text-lg">Pictures</span>
-              <span className="text-gray-400 font-light">22 Files</span>
+              <span className="text-gray-400 font-light">{pitureFiles.length} Files</span>
             </div>
           </div>
           <div className="flex gap-2 p-4 bg-green-100 rounded-lg w-48 items-center cursor-pointer" onClick={()=>{dispatch(
@@ -128,7 +134,7 @@ const Files = () => {
             <VideoCameraIcon className="w-12 h-12 rounded-lg bg-done p-2 text-white" />
             <div className="flex flex-col">
               <span className="font-semibold text-lg">Videos</span>
-              <span className="text-gray-400 font-light">12 Files</span>
+              <span className="text-gray-400 font-light">{videoFiles.length} Files</span>
             </div>
           </div>
           <div className="flex gap-2 p-4 bg-sky-100 rounded-lg w-48 items-center cursor-pointer" onClick={()=>{dispatch(
@@ -141,7 +147,7 @@ const Files = () => {
             <ArchiveIcon className="w-12 h-12 rounded-lg bg-pool p-2 text-white" />
             <div className="flex flex-col">
               <span className="font-semibold text-lg">Others</span>
-              <span className="text-gray-400 font-light">5 Files</span>
+              <span className="text-gray-400 font-light">{otherFiles.length} Files</span>
             </div>
           </div>
         </div>
@@ -180,6 +186,7 @@ const Files = () => {
         <div className="container overflow-y-auto max-h-[320px] scrollbar pb-4">
         <div className="grid files-grid content-center items-center justify-between gap-y-4">
           {filesInProject.map((file) => {
+            const uploader = users.find(user=> user?._id === file?.uploader)
             return (
               <>
                 <div className="flex items-center space-x-1">
@@ -190,7 +197,7 @@ const Files = () => {
                   </a>
                 </div>
                 <div>{Math.round((file.size / 1000000) * 100) / 100} MB</div>
-                <div>Me</div>
+                {currentUser?._id === uploader?._id ? <div>Me</div> : <div>{uploader?.fullName}</div>} 
                 <div>
                   {format(new Date(file.uploadTime), "MM/dd/yyyy - HH:mm")}
                 </div>

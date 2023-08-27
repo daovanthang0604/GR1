@@ -22,7 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />}>
           <Route index element={<SignIn />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="register" element={<Register />} />
         </Route>
         <Route path="/main" element={<SharedMainLayout />}>
           <Route index element={<Project />}></Route>
